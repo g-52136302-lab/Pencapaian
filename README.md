@@ -357,9 +357,17 @@
                     </div>
                 </div>
 
-                <!-- Search & Filters -->
-                <div class="flex flex-col sm:flex-row items-center gap-3">
-                    <div class="relative w-full sm:w-64">
+                <!-- Actions, Search & Filters -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <button onclick="loadSampleData()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-folder-plus text-brand-800"></i>
+                        <span>Muat Contoh Data</span>
+                    </button>
+                    <button onclick="clearAllDataConfirm()" class="px-3 py-2 bg-red-50 hover:bg-red-100 text-flame-600 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-red-200">
+                        <i class="fa-solid fa-trash"></i>
+                        <span>Kosongkan Semua Data</span>
+                    </button>
+                    <div class="relative w-full sm:w-52">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                         <input type="text" id="table-search" placeholder="Cari nama, program..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-brand-800 focus:bg-white transition">
                     </div>
@@ -380,6 +388,7 @@
                         <tr class="bg-slate-50 text-slate-500 text-[11px] font-extrabold uppercase tracking-wider border-b border-slate-200">
                             <th class="py-3.5 px-4">Pelajar</th>
                             <th class="py-3.5 px-4">Program / Pertandingan</th>
+                            <th class="py-3.5 px-4">Pencapaian</th>
                             <th class="py-3.5 px-4">Peringkat</th>
                             <th class="py-3.5 px-4 text-center">Merit</th>
                             <th class="py-3.5 px-4 text-center">Tarikh</th>
@@ -462,6 +471,20 @@
                         </select>
                     </div>
 
+                    <!-- Pencapaian / Kedudukan -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-slate-700">Pencapaian / Kedudukan <span class="text-flame-600">*</span></label>
+                        <select id="form-position" required class="w-full bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 px-3 py-2.5 focus:ring-2 focus:ring-brand-800 focus:bg-white focus:outline-none transition">
+                            <option value="Johan (Tempat Pertama)">Johan (Tempat Pertama)</option>
+                            <option value="Naib Johan (Tempat Kedua)">Naib Johan (Tempat Kedua)</option>
+                            <option value="Ketiga (Tempat Ketiga)">Ketiga (Tempat Ketiga)</option>
+                            <option value="Pingat Emas / Tempat Ke-4">Pingat Emas / Tempat Ke-4</option>
+                            <option value="Pingat Perak / Tempat Ke-5">Pingat Perak / Tempat Ke-5</option>
+                            <option value="Pingat Gangsa / Saguhati">Pingat Gangsa / Saguhati</option>
+                            <option value="Penyertaan">Penyertaan Sahaja</option>
+                        </select>
+                    </div>
+
                     <!-- Kategori -->
                     <div class="space-y-1.5">
                         <label class="text-xs font-bold text-slate-700">Kategori <span class="text-flame-600">*</span></label>
@@ -515,108 +538,8 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Initial Dataset for SJK (C) PEI HUA SEREMBAN
-        let achievementsData = [
-            {
-                id: 1,
-                student: "Lim Jia Wei",
-                class: "Tahun 6 Hwa",
-                program: "World International Mathematical Olympiad (WIMO)",
-                level: "INT",
-                category: "Akademik",
-                merit: 150,
-                teacher: "Cikgu Tan Bee Leng",
-                date: "2026-03-12"
-            },
-            {
-                id: 2,
-                student: "Chong Ming Jun",
-                class: "Tahun 5 Ren",
-                program: "Kejohanan Ping Pong MSSM Kebangsaan",
-                level: "KEB",
-                category: "Sukan",
-                merit: 120,
-                teacher: "Encik Lee Kah Sheng",
-                date: "2026-03-18"
-            },
-            {
-                id: 3,
-                student: "Lim Jia Wei",
-                class: "Tahun 6 Hwa",
-                program: "Pertandingan Robotik Kebangsaan (NRC)",
-                level: "KEB",
-                category: "Akademik",
-                merit: 110,
-                teacher: "Cikgu Tan Bee Leng",
-                date: "2026-02-25"
-            },
-            {
-                id: 4,
-                student: "Khoo Zi Ying",
-                class: "Tahun 6 Ping",
-                program: "Pertandingan Tarian Kebudayaan Negeri Sembilan",
-                level: "NEG",
-                category: "Seni",
-                merit: 90,
-                teacher: "Puan Lim Mei Ling",
-                date: "2026-02-10"
-            },
-            {
-                id: 5,
-                student: "Teoh Xian Sheng",
-                class: "Tahun 4 Zhong",
-                program: "Kejohanan Catur MSSD Seremban",
-                level: "ZON",
-                category: "Sukan",
-                merit: 75,
-                teacher: "Encik Lee Kah Sheng",
-                date: "2026-01-29"
-            },
-            {
-                id: 6,
-                student: "Wong Xuan Lei",
-                class: "Tahun 5 Ai",
-                program: "Pertandingan Syarahan Bahasa Melayu Daerah Seremban",
-                level: "D",
-                category: "Akademik",
-                merit: 80,
-                teacher: "Puan Noor Azlina",
-                date: "2026-03-01"
-            },
-            {
-                id: 7,
-                student: "Lim Jia Wei",
-                class: "Tahun 6 Hwa",
-                program: "Kangaroo Math Competition Global",
-                level: "INT",
-                category: "Akademik",
-                merit: 140,
-                teacher: "Cikgu Tan Bee Leng",
-                date: "2026-01-15"
-            },
-            {
-                id: 8,
-                student: "Ng Hui Leng",
-                class: "Tahun 4 Xiao",
-                program: "Pertandingan Melukis Poster Alam Sekitar Sekolah",
-                level: "SEK",
-                category: "Seni",
-                merit: 45,
-                teacher: "Puan Lim Mei Ling",
-                date: "2026-02-14"
-            },
-            {
-                id: 9,
-                student: "Chong Ming Jun",
-                class: "Tahun 5 Ren",
-                program: "Kejohanan Renang Antara Sekolah Negeri",
-                level: "NEG",
-                category: "Sukan",
-                merit: 95,
-                teacher: "Encik Lee Kah Sheng",
-                date: "2026-03-05"
-            }
-        ];
+        // Initial Empty Dataset for SJK (C) PEI HUA SEREMBAN
+        let achievementsData = [];
 
         // Global State
         let currentFilter = 'SEMUA';
@@ -714,7 +637,12 @@
                 .slice(0, 10);
 
             if (sortedStudents.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 text-xs text-slate-400">Tiada rekod pelajar.</div>`;
+                container.innerHTML = `
+                    <div class="text-center py-8 text-xs text-slate-400">
+                        <i class="fa-solid fa-inbox text-2xl text-slate-300 mb-2 block"></i>
+                        Pangkalan data kosong. Tiada rekod pelajar aktif.
+                    </div>
+                `;
                 return;
             }
 
@@ -763,7 +691,12 @@
                 .slice(0, 4);
 
             if (sortedTeachers.length === 0) {
-                container.innerHTML = `<div class="text-center py-4 text-xs text-slate-400">Tiada rekod guru.</div>`;
+                container.innerHTML = `
+                    <div class="text-center py-6 text-xs text-slate-400">
+                        <i class="fa-solid fa-chalkboard text-xl text-slate-300 mb-1 block"></i>
+                        Tiada rekod guru pembimbing.
+                    </div>
+                `;
                 return;
             }
 
@@ -808,6 +741,12 @@
                 document.getElementById('top-performer-merit').innerText = `${top.merit} Merit`;
                 document.getElementById('top-performer-achievements-count').innerText = `${top.highCount} Kejayaan Utama (INT/KEB/NEG)`;
                 document.getElementById('top-performer-avatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(top.name)}`;
+            } else {
+                document.getElementById('top-performer-name').innerText = "Belum Ada Pelajar";
+                document.getElementById('top-performer-class').innerText = "SJK (C) Pei Hua Seremban";
+                document.getElementById('top-performer-merit').innerText = "0 Merit";
+                document.getElementById('top-performer-achievements-count').innerText = "Daftar rekod baru di bawah";
+                document.getElementById('top-performer-avatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=PeiHuaUser`;
             }
         }
 
@@ -819,7 +758,12 @@
             const recentList = [...data].slice(0, 4);
 
             if (recentList.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Tiada rekod aktiviti terkini.</p>`;
+                container.innerHTML = `
+                    <div class="text-center py-6 text-xs text-slate-400">
+                        <i class="fa-solid fa-clock-rotate-left text-xl text-slate-300 mb-1 block"></i>
+                        Tiada aktiviti terkini. Gunakan borang pendaftaran di bawah.
+                    </div>
+                `;
                 return;
             }
 
@@ -833,6 +777,7 @@
                                 <span class="text-[10px] text-slate-500">(${item.class})</span>
                             </div>
                             <p class="text-xs font-semibold text-brand-800">${item.program}</p>
+                            <p class="text-[10px] font-bold text-amber-600">${item.position || 'Pencapaian'} • Merit: +${item.merit}</p>
                             <p class="text-[10px] text-slate-400">Tarikh: ${item.date} • Guru: ${item.teacher || '-'}</p>
                         </div>
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badge.bg} ${badge.text} ${badge.border}">
@@ -880,9 +825,10 @@
             if (paginatedData.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6" class="py-8 text-center text-slate-400">
-                            <i class="fa-solid fa-folder-open text-2xl mb-2 block"></i>
-                            Tiada rekod dijumpai.
+                        <td colspan="7" class="py-12 text-center text-slate-400">
+                            <i class="fa-solid fa-folder-open text-3xl text-slate-300 mb-2 block"></i>
+                            <span class="font-bold text-slate-600">Pangkalan Data Pelajar Kosong</span>
+                            <p class="text-xs text-slate-400 mt-1">Sila isi "Pendaftaran Aktiviti Baru" atau klik "Muat Contoh Data" untuk memulakan.</p>
                         </td>
                     </tr>
                 `;
@@ -906,6 +852,11 @@
                     <td class="py-3 px-4">
                         <p class="font-semibold text-slate-800">${item.program}</p>
                         <span class="text-[10px] text-slate-400">${item.category} • Pembimbing: ${item.teacher || '-'}</span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="text-xs font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                            ${item.position || 'Penyertaan'}
+                        </span>
                     </td>
                     <td class="py-3 px-4">
                         <span class="px-2.5 py-1 rounded-md text-[11px] font-bold border ${badge.bg} ${badge.text} ${badge.border}">
@@ -950,6 +901,61 @@
             showToast("Rekod berjaya dipadam daripada pangkalan data.", "danger");
         }
 
+        function clearAllDataConfirm() {
+            if (achievementsData.length === 0) {
+                showToast("Pangkalan data memang sedia kosong.", "info");
+                return;
+            }
+            if (confirm("Adakah anda pasti mahu mengosongkan SEMUA rekod pangkalan data? Action ini tidak boleh diundurkan.")) {
+                achievementsData = [];
+                refreshDashboard();
+                showToast("Semua data pangkalan data telah dikosongkan.", "danger");
+            }
+        }
+
+        function loadSampleData() {
+            achievementsData = [
+                {
+                    id: 1,
+                    student: "Lim Jia Wei",
+                    class: "Tahun 6 Hwa",
+                    program: "World International Mathematical Olympiad (WIMO)",
+                    level: "INT",
+                    position: "Pingat Emas / Tempat Ke-4",
+                    category: "Akademik",
+                    merit: 150,
+                    teacher: "Cikgu Tan Bee Leng",
+                    date: "2026-03-12"
+                },
+                {
+                    id: 2,
+                    student: "Chong Ming Jun",
+                    class: "Tahun 5 Ren",
+                    program: "Kejohanan Ping Pong MSSM Kebangsaan",
+                    level: "KEB",
+                    position: "Johan (Tempat Pertama)",
+                    category: "Sukan",
+                    merit: 120,
+                    teacher: "Encik Lee Kah Sheng",
+                    date: "2026-03-18"
+                },
+                {
+                    id: 3,
+                    student: "Khoo Zi Ying",
+                    class: "Tahun 6 Ping",
+                    program: "Pertandingan Tarian Kebudayaan Negeri Sembilan",
+                    level: "NEG",
+                    position: "Naib Johan (Tempat Kedua)",
+                    category: "Seni",
+                    merit: 90,
+                    teacher: "Puan Lim Mei Ling",
+                    date: "2026-02-10"
+                }
+            ];
+            refreshDashboard();
+            showToast("Contoh data berjaya dimuatkan ke dalam pangkalan data!", "success");
+        }
+
         // Registration Form Submit Handler
         function handleFormSubmit(e) {
             e.preventDefault();
@@ -958,6 +964,7 @@
             const studentClass = document.getElementById('form-class').value;
             const program = document.getElementById('form-program').value.trim();
             const level = document.getElementById('form-level').value;
+            const position = document.getElementById('form-position').value;
             const category = document.getElementById('form-category').value;
             const merit = parseInt(document.getElementById('form-merit').value, 10);
             const teacher = document.getElementById('form-teacher').value.trim() || "Cikgu SJKC Pei Hua Seremban";
@@ -968,6 +975,7 @@
                 class: studentClass,
                 program,
                 level,
+                position,
                 category,
                 merit,
                 teacher,
