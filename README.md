@@ -57,21 +57,29 @@
         .logo-font {
             font-family: 'Times New Roman', serif;
         }
+        /* Mobile horizontal scrollbar hiding for smooth swipe filters */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
 
     <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-xs sm:max-w-md w-full"></div>
 
     <!-- HEADER / NAVIGATION -->
     <header class="bg-gradient-to-r from-brand-900 via-brand-800 to-blue-900 text-white shadow-xl sticky top-0 z-40 border-b-2 border-flame-600">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-24">
+            <div class="flex items-center justify-between h-20 sm:h-24">
                 
                 <!-- Logo & School Crest (Exact Match to SJKC PEI HUA SEREMBAN Logo) -->
-                <div class="flex items-center space-x-4">
-                    <div class="bg-white rounded-full p-1.5 shadow-lg border-2 border-amber-300 flex-shrink-0 flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 hover:scale-105 transition-transform duration-300">
+                <div class="flex items-center space-x-3 sm:space-x-4">
+                    <div class="bg-white rounded-full p-1 shadow-lg border-2 border-amber-300 flex-shrink-0 flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 hover:scale-105 transition-transform duration-300">
                         <!-- Vector Replica of SJK (C) PEI HUA SEREMBAN Emblem -->
                         <svg viewBox="0 0 400 320" class="w-full h-full">
                             <!-- Left Chinese Character 培 -->
@@ -111,17 +119,17 @@
                     </div>
 
                     <div>
-                        <div class="flex items-center gap-2">
-                            <h1 class="text-xl sm:text-3xl font-extrabold tracking-tight text-white drop-shadow">e-PENCAPAIAN</h1>
-                            <span class="bg-flame-600 text-white text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow">Sistem Kokurikulum</span>
+                        <div class="flex items-center gap-1.5 sm:gap-2">
+                            <h1 class="text-base sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-white drop-shadow">e-PENCAPAIAN</h1>
+                            <span class="bg-flame-600 text-white text-[9px] sm:text-xs font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow">SJKC Pei Hua</span>
                         </div>
-                        <p class="text-xs sm:text-sm font-semibold text-blue-200 tracking-wide mt-0.5">
-                            SJK (C) PEI HUA SEREMBAN <span class="hidden sm:inline text-blue-300 font-normal">|( 芙蓉培华国民型华文小学 )</span>
+                        <p class="text-[11px] sm:text-xs lg:text-sm font-semibold text-blue-200 tracking-wide mt-0.5 truncate max-w-[200px] sm:max-w-none">
+                            SJK (C) PEI HUA SEREMBAN <span class="hidden md:inline text-blue-300 font-normal">|( 芙蓉培华国民型华文小学 )</span>
                         </p>
                     </div>
                 </div>
 
-                <!-- Header Actions -->
+                <!-- Desktop Header Actions -->
                 <div class="hidden md:flex items-center space-x-5">
                     <div class="text-right">
                         <p class="text-[11px] text-blue-200 uppercase tracking-widest font-bold">Penggal Sesi</p>
@@ -133,98 +141,123 @@
                         <span>Daftar Aktiviti</span>
                     </a>
                 </div>
+
+                <!-- Mobile Hamburger Toggle Button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="p-2 text-blue-100 hover:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-300">
+                        <i id="mobile-menu-icon" class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-900 border-t border-brand-700 px-4 py-4 space-y-3">
+            <div class="flex items-center justify-between text-xs text-blue-200 border-b border-brand-800 pb-2">
+                <span>Penggal Sesi Semasa:</span>
+                <span class="font-bold text-amber-300">2026 / 2027</span>
+            </div>
+            <div class="flex flex-col gap-2 pt-1">
+                <a href="#pangkalan-data" onclick="toggleMobileMenu()" class="w-full text-center bg-brand-800 hover:bg-brand-700 text-white text-xs font-bold py-2.5 rounded-xl border border-brand-700 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-database"></i>
+                    <span>Pangkalan Data Pelajar</span>
+                </a>
+                <a href="#pendaftaran" onclick="toggleMobileMenu()" class="w-full text-center bg-flame-600 hover:bg-flame-700 text-white text-xs font-bold py-2.5 rounded-xl shadow flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus-circle"></i>
+                    <span>Daftar Aktiviti Baru</span>
+                </a>
             </div>
         </div>
     </header>
 
     <!-- MAIN DASHBOARD CONTENT -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6 sm:space-y-8">
 
         <!-- FILTER BAR SECTION -->
-        <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5">
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-5">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4">
                 <div class="flex items-center space-x-3">
-                    <div class="p-3 bg-brand-50 text-brand-800 rounded-xl">
-                        <i class="fa-solid fa-filter text-lg"></i>
+                    <div class="p-2.5 sm:p-3 bg-brand-50 text-brand-800 rounded-xl">
+                        <i class="fa-solid fa-filter text-base sm:text-lg"></i>
                     </div>
                     <div>
                         <h2 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Penapis Peringkat Rekod</h2>
-                        <p class="text-xs text-slate-500">Pilih peringkat pertandingan untuk menapis paparan statistik dan pencapaian.</p>
+                        <p class="text-[11px] sm:text-xs text-slate-500">Pilih peringkat pertandingan untuk menapis paparan statistik dan pencapaian.</p>
                     </div>
                 </div>
 
-                <!-- Level Filter Buttons -->
-                <div class="flex flex-wrap gap-2" id="filter-container">
-                    <button onclick="setFilter('SEMUA')" data-filter="SEMUA" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm bg-brand-800 text-white border border-brand-800">
+                <!-- Level Filter Buttons (Horizontal Scrollable on Mobile) -->
+                <div class="flex items-center overflow-x-auto no-scrollbar gap-2 py-1 -mx-1 px-1" id="filter-container">
+                    <button onclick="setFilter('SEMUA')" data-filter="SEMUA" class="filter-btn shrink-0 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm bg-brand-800 text-white border border-brand-800">
                         SEMUA REKOD
                     </button>
-                    <button onclick="setFilter('INT')" data-filter="INT" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
+                    <button onclick="setFilter('INT')" data-filter="INT" class="filter-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
                         INT <span class="text-[10px] font-normal opacity-75">(Antarabangsa)</span>
                     </button>
-                    <button onclick="setFilter('KEB')" data-filter="KEB" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
+                    <button onclick="setFilter('KEB')" data-filter="KEB" class="filter-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
                         KEB <span class="text-[10px] font-normal opacity-75">(Kebangsaan)</span>
                     </button>
-                    <button onclick="setFilter('NEG')" data-filter="NEG" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
+                    <button onclick="setFilter('NEG')" data-filter="NEG" class="filter-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
                         NEG <span class="text-[10px] font-normal opacity-75">(Negeri)</span>
                     </button>
-                    <button onclick="setFilter('ZON')" data-filter="ZON" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
+                    <button onclick="setFilter('ZON')" data-filter="ZON" class="filter-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
                         ZON <span class="text-[10px] font-normal opacity-75">(Zon)</span>
                     </button>
-                    <button onclick="setFilter('D')" data-filter="D" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
+                    <button onclick="setFilter('D')" data-filter="D" class="filter-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
                         D <span class="text-[10px] font-normal opacity-75">(Daerah)</span>
                     </button>
-                    <button onclick="setFilter('SEK')" data-filter="SEK" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
+                    <button onclick="setFilter('SEK')" data-filter="SEK" class="filter-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
                         SEK <span class="text-[10px] font-normal opacity-75">(Sekolah)</span>
                     </button>
                 </div>
             </div>
 
             <!-- Dynamic Filter Status -->
-            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <div class="mt-3 sm:mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs gap-2">
                 <span class="text-slate-600 font-medium">Status Penapis Semasa: <strong id="filter-status-text" class="text-brand-800 font-bold uppercase">SEMUA REKOD</strong></span>
-                <span id="filtered-count-badge" class="bg-blue-50 text-brand-800 px-3 py-1 rounded-full font-extrabold border border-blue-100">0 Rekod Ditemui</span>
+                <span id="filtered-count-badge" class="bg-blue-50 text-brand-800 px-3 py-0.5 rounded-full font-extrabold border border-blue-100">0 Rekod Ditemui</span>
             </div>
         </section>
 
-        <!-- DASHBOARD GRID LAYOUT -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- DASHBOARD GRID LAYOUT (Desktop 3-column / Mobile 1-column Stack) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
             
             <!-- LEFT COLUMN: TOP 10 STUDENTS & TEACHERS -->
-            <div class="space-y-8 lg:col-span-1">
+            <div class="space-y-6 sm:space-y-8 lg:col-span-1">
                 
                 <!-- TOP 10 PELAJAR AKTIF -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6">
-                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-6">
+                    <div class="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-100 mb-3 sm:mb-4">
                         <div class="flex items-center space-x-3">
-                            <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl">
-                                <i class="fa-solid fa-trophy text-lg"></i>
+                            <div class="p-2 sm:p-2.5 bg-amber-50 text-amber-600 rounded-xl">
+                                <i class="fa-solid fa-trophy text-base sm:text-lg"></i>
                             </div>
                             <div>
-                                <h3 class="font-bold text-slate-800 text-base">Top 10 Pelajar Aktif</h3>
-                                <p class="text-xs text-slate-500">Mengikut Pengumpulan Merit</p>
+                                <h3 class="font-bold text-slate-800 text-sm sm:text-base">Top 10 Pelajar Aktif</h3>
+                                <p class="text-[11px] sm:text-xs text-slate-500">Mengikut Pengumpulan Merit</p>
                             </div>
                         </div>
-                        <span class="text-[11px] font-extrabold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg">MERIT</span>
+                        <span class="text-[10px] sm:text-[11px] font-extrabold text-amber-600 bg-amber-50 px-2 sm:px-2.5 py-1 rounded-lg">MERIT</span>
                     </div>
 
-                    <div id="top-students-list" class="space-y-3 overflow-y-auto max-h-[380px] pr-1">
+                    <div id="top-students-list" class="space-y-2.5 sm:space-y-3 overflow-y-auto max-h-[340px] sm:max-h-[380px] pr-1">
                         <!-- Dynamic Student Content -->
                     </div>
                 </div>
 
                 <!-- GURU PALING AKTIF -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6">
-                    <div class="flex items-center space-x-3 pb-4 border-b border-slate-100 mb-4">
-                        <div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
-                            <i class="fa-solid fa-chalkboard-user text-lg"></i>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-6">
+                    <div class="flex items-center space-x-3 pb-3 sm:pb-4 border-b border-slate-100 mb-3 sm:mb-4">
+                        <div class="p-2 sm:p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
+                            <i class="fa-solid fa-chalkboard-user text-base sm:text-lg"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-slate-800 text-base">Guru Paling Aktif</h3>
-                            <p class="text-xs text-slate-500">Guru Pembimbing Pertandingan</p>
+                            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Guru Paling Aktif</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500">Guru Pembimbing Pertandingan</p>
                         </div>
                     </div>
 
-                    <div id="top-teachers-list" class="space-y-3">
+                    <div id="top-teachers-list" class="space-y-2.5 sm:space-y-3">
                         <!-- Dynamic Teacher List -->
                     </div>
                 </div>
@@ -232,107 +265,107 @@
             </div>
 
             <!-- RIGHT COLUMN: SPOTLIGHT, METRICS & CHARTS -->
-            <div class="space-y-8 lg:col-span-2">
+            <div class="space-y-6 sm:space-y-8 lg:col-span-2">
                 
                 <!-- TOP PERFORMER SPOTLIGHT & METRICS -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                     
                     <!-- Top Performer Hero Card -->
-                    <div class="md:col-span-2 bg-gradient-to-br from-brand-900 via-brand-800 to-blue-900 rounded-2xl shadow-lg p-6 text-white relative overflow-hidden flex flex-col justify-between border border-brand-700">
+                    <div class="md:col-span-2 bg-gradient-to-br from-brand-900 via-brand-800 to-blue-900 rounded-2xl shadow-lg p-5 sm:p-6 text-white relative overflow-hidden flex flex-col justify-between border border-brand-700">
                         <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-amber-400/10 rounded-full blur-2xl pointer-events-none"></div>
-                        <div class="absolute top-4 right-4 text-amber-400 opacity-20 text-7xl font-black">#1</div>
+                        <div class="absolute top-4 right-4 text-amber-400 opacity-20 text-5xl sm:text-7xl font-black">#1</div>
                         
-                        <div class="flex items-center space-x-2 text-amber-300 font-semibold text-xs uppercase tracking-wider mb-2">
+                        <div class="flex items-center space-x-2 text-amber-300 font-semibold text-[11px] sm:text-xs uppercase tracking-wider mb-2">
                             <i class="fa-solid fa-crown text-amber-400"></i>
                             <span>Pelajar Cemerlang SJKC Pei Hua</span>
                         </div>
 
-                        <div class="flex flex-col sm:flex-row items-center gap-5 z-10 my-2">
-                            <div class="relative">
-                                <img id="top-performer-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=TanWeiMing" alt="Top Performer Avatar" class="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-white p-1 border-2 border-amber-400 shadow-xl object-cover">
+                        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 z-10 my-2">
+                            <div class="relative shrink-0">
+                                <img id="top-performer-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=PeiHuaUser" alt="Top Performer Avatar" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white p-1 border-2 border-amber-400 shadow-xl object-cover">
                             </div>
                             <div class="text-center sm:text-left space-y-1">
-                                <h4 id="top-performer-name" class="text-xl sm:text-2xl font-extrabold text-white">Lim Jia Wei</h4>
-                                <p id="top-performer-class" class="text-blue-200 text-xs font-semibold">Tahun 6 Hwa • SJK (C) Pei Hua Seremban</p>
+                                <h4 id="top-performer-name" class="text-lg sm:text-2xl font-extrabold text-white">Belum Ada Pelajar</h4>
+                                <p id="top-performer-class" class="text-blue-200 text-xs font-semibold">SJK (C) Pei Hua Seremban</p>
                                 <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-xl text-xs font-medium text-amber-300 mt-2">
                                     <i class="fa-solid fa-medal"></i>
-                                    <span id="top-performer-achievements-count">Kejayaan Terbanyak Peringkat Tinggi</span>
+                                    <span id="top-performer-achievements-count">Daftar rekod baru di bawah</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-blue-100 z-10">
+                        <div class="mt-3 sm:mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-blue-100 z-10">
                             <span>Jumlah Merit Terumpul:</span>
-                            <span id="top-performer-merit" class="text-xl font-extrabold text-amber-300">0 Merit</span>
+                            <span id="top-performer-merit" class="text-lg sm:text-xl font-extrabold text-amber-300">0 Merit</span>
                         </div>
                     </div>
 
                     <!-- Summary Stats Cards -->
-                    <div class="space-y-4 flex flex-col justify-between">
-                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center space-x-4">
-                            <div class="p-3 bg-blue-50 text-brand-800 rounded-xl">
-                                <i class="fa-solid fa-award text-xl"></i>
+                    <div class="grid grid-cols-3 md:grid-cols-1 gap-3 sm:gap-4">
+                        <div class="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-slate-200/80 flex flex-col md:flex-row items-center md:space-x-4 text-center md:text-left justify-center">
+                            <div class="p-2.5 sm:p-3 bg-blue-50 text-brand-800 rounded-xl mb-1 md:mb-0">
+                                <i class="fa-solid fa-award text-base sm:text-xl"></i>
                             </div>
                             <div>
-                                <p class="text-[11px] text-slate-500 font-bold uppercase">Jumlah Kejayaan</p>
-                                <p id="stat-total-achievements" class="text-xl font-extrabold text-slate-800">0</p>
-                                <p class="text-[10px] text-brand-600 font-medium">Rekod Berdaftar</p>
+                                <p class="text-[9px] sm:text-[11px] text-slate-500 font-bold uppercase">Kejayaan</p>
+                                <p id="stat-total-achievements" class="text-base sm:text-xl font-extrabold text-slate-800">0</p>
+                                <p class="text-[9px] sm:text-[10px] text-brand-600 font-medium hidden sm:block">Rekod Berdaftar</p>
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center space-x-4">
-                            <div class="p-3 bg-purple-50 text-purple-600 rounded-xl">
-                                <i class="fa-solid fa-users text-xl"></i>
+                        <div class="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-slate-200/80 flex flex-col md:flex-row items-center md:space-x-4 text-center md:text-left justify-center">
+                            <div class="p-2.5 sm:p-3 bg-purple-50 text-purple-600 rounded-xl mb-1 md:mb-0">
+                                <i class="fa-solid fa-users text-base sm:text-xl"></i>
                             </div>
                             <div>
-                                <p class="text-[11px] text-slate-500 font-bold uppercase">Pelajar Terlibat</p>
-                                <p id="stat-total-students" class="text-xl font-extrabold text-slate-800">0</p>
-                                <p class="text-[10px] text-purple-600 font-medium">Penerima Merit</p>
+                                <p class="text-[9px] sm:text-[11px] text-slate-500 font-bold uppercase">Pelajar</p>
+                                <p id="stat-total-students" class="text-base sm:text-xl font-extrabold text-slate-800">0</p>
+                                <p class="text-[9px] sm:text-[10px] text-purple-600 font-medium hidden sm:block">Penerima Merit</p>
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center space-x-4">
-                            <div class="p-3 bg-flame-50 text-flame-600 rounded-xl">
-                                <i class="fa-solid fa-fire text-xl"></i>
+                        <div class="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-slate-200/80 flex flex-col md:flex-row items-center md:space-x-4 text-center md:text-left justify-center">
+                            <div class="p-2.5 sm:p-3 bg-flame-50 text-flame-600 rounded-xl mb-1 md:mb-0">
+                                <i class="fa-solid fa-fire text-base sm:text-xl"></i>
                             </div>
                             <div>
-                                <p class="text-[11px] text-slate-500 font-bold uppercase">Purata Merit</p>
-                                <p id="stat-avg-merit" class="text-xl font-extrabold text-slate-800">0</p>
-                                <p class="text-[10px] text-flame-600 font-medium">Skor Per Aktiviti</p>
+                                <p class="text-[9px] sm:text-[11px] text-slate-500 font-bold uppercase">Purata</p>
+                                <p id="stat-avg-merit" class="text-base sm:text-xl font-extrabold text-slate-800">0</p>
+                                <p class="text-[9px] sm:text-[10px] text-flame-600 font-medium hidden sm:block">Skor Per Aktiviti</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- GRAF RINGKASAN PENCAPAIAN CHART -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-2 mb-4">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 sm:pb-4 border-b border-slate-100 gap-2 mb-4">
                         <div class="flex items-center space-x-3">
-                            <div class="p-2.5 bg-blue-50 text-brand-800 rounded-xl">
-                                <i class="fa-solid fa-chart-column text-lg"></i>
+                            <div class="p-2 sm:p-2.5 bg-blue-50 text-brand-800 rounded-xl">
+                                <i class="fa-solid fa-chart-column text-base sm:text-lg"></i>
                             </div>
                             <div>
-                                <h3 class="font-bold text-slate-800 text-base">Graf Ringkasan Pencapaian</h3>
-                                <p class="text-xs text-slate-500">Agihan Program Mengikut Peringkat Pertandingan</p>
+                                <h3 class="font-bold text-slate-800 text-sm sm:text-base">Graf Ringkasan Pencapaian</h3>
+                                <p class="text-[11px] sm:text-xs text-slate-500">Agihan Program Mengikut Peringkat Pertandingan</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Dynamic Chart Container -->
-                    <div class="relative h-64 sm:h-72 w-full">
+                    <div class="relative h-56 sm:h-72 w-full">
                         <canvas id="chartCanvas"></canvas>
                     </div>
                 </div>
 
                 <!-- PENCAPAIAN TERKINI FEED -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6">
-                    <div class="flex items-center space-x-3 pb-4 border-b border-slate-100 mb-4">
-                        <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
-                            <i class="fa-solid fa-bolt text-lg"></i>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-6">
+                    <div class="flex items-center space-x-3 pb-3 sm:pb-4 border-b border-slate-100 mb-4">
+                        <div class="p-2 sm:p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
+                            <i class="fa-solid fa-bolt text-base sm:text-lg"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-slate-800 text-base">Pencapaian Terkini</h3>
-                            <p class="text-xs text-slate-500">Kemas kini langsung penglibatan & kejayaan pelajar SJKC Pei Hua</p>
+                            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Pencapaian Terkini</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500">Kemas kini langsung penglibatan & kejayaan pelajar SJKC Pei Hua</p>
                         </div>
                     </div>
 
@@ -345,28 +378,30 @@
         </div>
 
         <!-- SECTION: PANGKALAN DATA PELAJAR (DATABASE TABLE) -->
-        <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 space-y-6">
+        <section id="pangkalan-data" class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-6 space-y-4 sm:space-y-6">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
                 <div class="flex items-center space-x-3">
                     <div class="p-2.5 bg-brand-50 text-brand-800 rounded-xl">
                         <i class="fa-solid fa-database text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-lg font-bold text-slate-800">Pangkalan Data Pelajar</h2>
+                        <h2 class="text-base sm:text-lg font-bold text-slate-800">Pangkalan Data Pelajar</h2>
                         <p class="text-xs text-slate-500">Senarai rekod lengkap pencapaian murid SJK (C) Pei Hua Seremban</p>
                     </div>
                 </div>
 
                 <!-- Actions, Search & Filters -->
-                <div class="flex flex-wrap items-center gap-3">
-                    <button onclick="loadSampleData()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-folder-plus text-brand-800"></i>
-                        <span>Muat Contoh Data</span>
-                    </button>
-                    <button onclick="clearAllDataConfirm()" class="px-3 py-2 bg-red-50 hover:bg-red-100 text-flame-600 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-red-200">
-                        <i class="fa-solid fa-trash"></i>
-                        <span>Kosongkan Semua Data</span>
-                    </button>
+                <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3">
+                    <div class="grid grid-cols-2 sm:flex sm:items-center gap-2">
+                        <button onclick="loadSampleData()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-folder-plus text-brand-800"></i>
+                            <span>Muat Contoh</span>
+                        </button>
+                        <button onclick="clearAllDataConfirm()" class="px-3 py-2 bg-red-50 hover:bg-red-100 text-flame-600 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 border border-red-200">
+                            <i class="fa-solid fa-trash"></i>
+                            <span>Kosongkan</span>
+                        </button>
+                    </div>
                     <div class="relative w-full sm:w-52">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                         <input type="text" id="table-search" placeholder="Cari nama, program..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-brand-800 focus:bg-white transition">
@@ -381,9 +416,9 @@
                 </div>
             </div>
 
-            <!-- Responsive Table -->
-            <div class="overflow-x-auto rounded-xl border border-slate-100">
-                <table class="w-full text-left border-collapse">
+            <!-- Responsive Table Wrapper -->
+            <div class="overflow-x-auto rounded-xl border border-slate-100 -mx-1 sm:mx-0">
+                <table class="w-full text-left border-collapse min-w-[640px]">
                     <thead>
                         <tr class="bg-slate-50 text-slate-500 text-[11px] font-extrabold uppercase tracking-wider border-b border-slate-200">
                             <th class="py-3.5 px-4">Pelajar</th>
@@ -403,7 +438,7 @@
 
             <!-- Table Pagination -->
             <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3 pt-2">
-                <p id="table-pagination-info">Menunjukkan 0 daripada 0 rekod</p>
+                <p id="table-pagination-info" class="text-center sm:text-left">Menunjukkan 0 daripada 0 rekod</p>
                 <div class="flex items-center space-x-1">
                     <button onclick="prevPage()" id="btn-prev-page" class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 font-bold disabled:opacity-50 disabled:cursor-not-allowed">Sebelumnya</button>
                     <span id="page-num-display" class="px-3 py-1 bg-brand-50 text-brand-800 font-extrabold rounded-lg">1</span>
@@ -413,19 +448,19 @@
         </section>
 
         <!-- SECTION: PENDAFTARAN AKTIVITI (REGISTRATION FORM) -->
-        <section id="pendaftaran" class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6">
+        <section id="pendaftaran" class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-6">
             <div class="flex items-center space-x-3 pb-4 border-b border-slate-100 mb-6">
                 <div class="p-2.5 bg-flame-50 text-flame-600 rounded-xl">
                     <i class="fa-solid fa-pen-to-square text-lg"></i>
                 </div>
                 <div>
-                    <h2 class="text-lg font-bold text-slate-800">Pendaftaran Aktiviti Baru</h2>
+                    <h2 class="text-base sm:text-lg font-bold text-slate-800">Pendaftaran Aktiviti Baru</h2>
                     <p class="text-xs text-slate-500">Borang pendaftaran rekod pencapaian pelajar SJK (C) Pei Hua Seremban</p>
                 </div>
             </div>
 
             <form id="activity-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     <!-- Nama Pelajar -->
                     <div class="space-y-1.5">
                         <label class="text-xs font-bold text-slate-700">Nama Pelajar <span class="text-flame-600">*</span></label>
@@ -503,7 +538,7 @@
                     </div>
 
                     <!-- Merit Points & Guru -->
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:col-span-2 lg:col-span-3">
                         <div class="space-y-1.5">
                             <label class="text-xs font-bold text-slate-700">Markah Merit <span class="text-flame-600">*</span></label>
                             <input type="number" id="form-merit" required min="5" max="300" value="50" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-brand-800 focus:bg-white focus:outline-none transition">
@@ -516,11 +551,11 @@
                 </div>
 
                 <!-- Form Submit Action -->
-                <div class="flex items-center justify-end space-x-3 pt-4 border-t border-slate-100">
-                    <button type="reset" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition">
+                <div class="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                    <button type="reset" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition text-center">
                         Reset Borang
                     </button>
-                    <button type="submit" class="px-6 py-2.5 bg-brand-800 hover:bg-brand-900 text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition flex items-center space-x-2">
+                    <button type="submit" class="px-6 py-2.5 bg-brand-800 hover:bg-brand-900 text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition flex items-center justify-center space-x-2">
                         <i class="fa-solid fa-paper-plane"></i>
                         <span>Simpan & Kemaskini Pangkalan Data</span>
                     </button>
@@ -533,12 +568,12 @@
     <!-- FOOTER -->
     <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800 mt-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
-            <div class="flex items-center justify-center space-x-2 text-white font-bold text-sm">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-white font-bold text-xs sm:text-sm">
                 <span>SJK (C) PEI HUA SEREMBAN</span>
-                <span>•</span>
+                <span class="hidden sm:inline">•</span>
                 <span class="text-amber-400">芙蓉培华国民型华文小学</span>
             </div>
-            <p>© 2026 SJK (C) Pei Hua Seremban. Portal e-PENCAPAIAN Pengurusan Merit & Rekod Kokurikulum.</p>
+            <p class="text-[11px] sm:text-xs">© 2026 SJK (C) Pei Hua Seremban. Portal e-PENCAPAIAN Pengurusan Merit & Rekod Kokurikulum.</p>
         </div>
     </footer>
 
@@ -552,6 +587,18 @@
         let currentPage = 1;
         const rowsPerPage = 5;
         let chartInstance = null;
+
+        // Mobile Menu Toggle Function
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('mobile-menu-icon');
+            menu.classList.toggle('hidden');
+            if (menu.classList.contains('hidden')) {
+                icon.className = 'fa-solid fa-bars text-xl';
+            } else {
+                icon.className = 'fa-solid fa-xmark text-xl';
+            }
+        }
 
         // Badge Styling Mapping
         const levelBadges = {
@@ -572,6 +619,13 @@
                 currentPage = 1;
                 renderTable();
             });
+
+            // Auto resize handler for chart responsive rendering
+            window.addEventListener('resize', () => {
+                if (chartInstance) {
+                    chartInstance.resize();
+                }
+            });
         });
 
         // Level Filter Action
@@ -581,9 +635,9 @@
 
             document.querySelectorAll('#filter-container button').forEach(btn => {
                 if (btn.dataset.filter === level) {
-                    btn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm bg-brand-800 text-white border border-brand-800";
+                    btn.className = "filter-btn shrink-0 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm bg-brand-800 text-white border border-brand-800";
                 } else {
-                    btn.className = "filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200";
+                    btn.className = "filter-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200";
                 }
             });
 
