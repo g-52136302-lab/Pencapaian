@@ -440,12 +440,18 @@
                         <label class="text-xs font-bold text-slate-700">Tahun / Kelas <span class="text-flame-600">*</span></label>
                         <select id="form-class" required class="w-full bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 px-3 py-2.5 focus:ring-2 focus:ring-brand-800 focus:bg-white focus:outline-none transition">
                             <option value="">Pilih Kelas</option>
-                            <option value="Tahun 4 Zhong">Tahun 4 Zhong (培)</option>
-                            <option value="Tahun 4 Xiao">Tahun 4 Xiao (华)</option>
-                            <option value="Tahun 5 Ren">Tahun 5 Ren (仁)</option>
-                            <option value="Tahun 5 Ai">Tahun 5 Ai (爱)</option>
-                            <option value="Tahun 6 Hwa">Tahun 6 Hwa (华)</option>
-                            <option value="Tahun 6 Ping">Tahun 6 Ping (平)</option>
+                            <option value="1M">1M</option>
+                            <option value="1S">1S</option>
+                            <option value="2M">2M</option>
+                            <option value="2S">2S</option>
+                            <option value="3M">3M</option>
+                            <option value="3S">3S</option>
+                            <option value="4M">4M</option>
+                            <option value="4S">4S</option>
+                            <option value="5M">5M</option>
+                            <option value="5S">5S</option>
+                            <option value="6M">6M</option>
+                            <option value="6S">6S</option>
                         </select>
                     </div>
 
@@ -918,7 +924,7 @@
                 {
                     id: 1,
                     student: "Lim Jia Wei",
-                    class: "Tahun 6 Hwa",
+                    class: "6M",
                     program: "World International Mathematical Olympiad (WIMO)",
                     level: "INT",
                     position: "Pingat Emas / Tempat Ke-4",
@@ -930,7 +936,7 @@
                 {
                     id: 2,
                     student: "Chong Ming Jun",
-                    class: "Tahun 5 Ren",
+                    class: "5S",
                     program: "Kejohanan Ping Pong MSSM Kebangsaan",
                     level: "KEB",
                     position: "Johan (Tempat Pertama)",
@@ -942,7 +948,7 @@
                 {
                     id: 3,
                     student: "Khoo Zi Ying",
-                    class: "Tahun 6 Ping",
+                    class: "4M",
                     program: "Pertandingan Tarian Kebudayaan Negeri Sembilan",
                     level: "NEG",
                     position: "Naib Johan (Tempat Kedua)",
