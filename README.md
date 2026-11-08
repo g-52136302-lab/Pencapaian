@@ -1,554 +1,1069 @@
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>e-Pencapaian - SMKA Tun Ahmadshah</title>
-    
-    <!-- SDK & Frameworks -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-PENCAPAIAN - SJK (C) PEI HUA SEREMBAN</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
- 
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f5fa',
+                            100: '#e1ebd6',
+                            500: '#1d4ed8',
+                            600: '#1e40af',
+                            700: '#1d3557',
+                            800: '#0f4c81',
+                            900: '#0a2540',
+                        },
+                        flame: {
+                            400: '#f87171',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --neon-cyan: #06b6d4;
-            --neon-blue: #3b82f6;
-            --neon-purple: #a855f7;
-            --glass-bg: rgba(15, 23, 42, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.1);
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
-        
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #020617;
-            color: #f8fafc;
-            overflow: hidden;
-            height: 100vh; /* Fallback */
-            height: 100dvh;
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
         }
- 
-        .font-header { font-family: 'Space Grotesk', sans-serif; }
-        
-        .bg-cyber {
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(6, 182, 212, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-                linear-gradient(to bottom, #020617, #0f172a);
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
         }
-        
-        .dot-grid {
-            background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
-        
-        .silhouette {
-            position: absolute;
-            left: 50%; top: 50%;
-            transform: translate(-50%, -50%);
-            width: 700px;
-            opacity: 0.4;
-            mask-image: radial-gradient(circle, black 55%, transparent 95%);
-            pointer-events: none;
-            z-index: 0;
-            filter: drop-shadow(0 0 40px rgba(6, 182, 212, 0.4)) saturate(1.5);
+        .logo-font {
+            font-family: 'Times New Roman', serif;
         }
- 
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
-        }
- 
-        .orb {
-            width: 80px; height: 80px; border-radius: 50%;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-weight: 800; cursor: pointer; transition: all 0.4s ease;
-            position: absolute; z-index: 10;
-        }
-        
-        @media (max-width: 640px) {
-            .orb { width: 55px; height: 55px; font-size: 8px; }
-            .silhouette { width: 400px; }
-            .center-hub { padding: 1rem; transform: scale(0.9); }
-        }
- 
-        .orb:hover { transform: scale(1.15) translateY(-5px); box-shadow: 0 0 25px var(--neon-cyan); }
-        .orb-active { box-shadow: 0 0 35px var(--neon-cyan); border: 2px solid var(--neon-cyan); transform: scale(1.1); background: rgba(6, 182, 212, 0.2); }
- 
-        .custom-scroll { overflow-y: auto; scrollbar-gutter: stable; }
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
- 
-        .loading-overlay {
-            position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95);
-            z-index: 999; display: none; align-items: center; justify-content: center; flex-direction: column;
-        }
- 
-        .float-anim { animation: subtle-float 5s ease-in-out infinite; }
-        @keyframes subtle-float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
- 
-        @keyframes shine {
-            0% { filter: brightness(1) drop-shadow(0 0 5px #fbbf24); transform: scale(1); }
-            50% { filter: brightness(1.8) drop-shadow(0 0 25px #fbbf24); transform: scale(1.1); }
-            100% { filter: brightness(1) drop-shadow(0 0 5px #fbbf24); transform: scale(1); }
-        }
-        .shiny-star { animation: shine 2s infinite ease-in-out; }
-        
-        .log-item { transition: all 0.3s ease; border-left-width: 4px; }
-        .log-item:hover { transform: translateX(5px); background: rgba(255,255,255,0.05); }
- 
-        .center-hub { cursor: pointer; transition: all 0.3s ease; }
-        .center-hub:hover { transform: scale(1.05); background: rgba(15, 23, 42, 0.9); border-color: var(--neon-cyan); }
     </style>
 </head>
-<body class="bg-cyber flex flex-col">
- 
-    <div id="loading" class="loading-overlay">
-        <div class="w-14 h-14 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p class="text-cyan-400 font-bold tracking-widest text-xs uppercase animate-pulse">Menghubungkan ke Pangkalan Data...</p>
-    </div>
- 
-    <div class="dot-grid fixed inset-0 pointer-events-none"></div>
-    <img src="https://i.postimg.cc/K8JqhPCn/b57f0c8f43f3dc7b6b0de661b0be3c3a.png" class="silhouette" alt="Silhouette">
- 
-    <div class="relative z-10 flex flex-col h-full p-2 sm:p-5 space-y-4">
-        
-        <!-- HEADER -->
-        <header class="flex flex-col sm:flex-row items-center justify-between px-3 sm:px-6 py-3 sm:py-0 sm:h-[80px] glass rounded-2xl shrink-0 gap-3 sm:gap-0">
-            <div class="flex items-center space-x-3 w-full sm:w-auto justify-center sm:justify-start">
-                <img src="https://i.postimg.cc/ZqnQWKv3/Smkatunas-(1)-LOGO.jpg" class="h-10 w-10 sm:h-11 sm:w-11 rounded-lg border border-white/10 shadow-lg shadow-cyan-500/20" alt="Logo">
-                <div class="overflow-hidden text-center sm:text-left">
-                    <h1 class="text-xl sm:text-2xl font-header font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400 leading-none uppercase">e-PENCAPAIAN</h1>
-                    <p class="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] mt-1 whitespace-nowrap">SMKA Tun Ahmadshah</p>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="bg-gradient-to-r from-brand-900 via-brand-800 to-blue-900 text-white shadow-xl sticky top-0 z-40 border-b-2 border-flame-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-24">
+                
+                <!-- Logo & School Crest (Exact Match to SJKC PEI HUA SEREMBAN Logo) -->
+                <div class="flex items-center space-x-4">
+                    <div class="bg-white rounded-full p-1.5 shadow-lg border-2 border-amber-300 flex-shrink-0 flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 hover:scale-105 transition-transform duration-300">
+                        <!-- Vector Replica of SJK (C) PEI HUA SEREMBAN Emblem -->
+                        <svg viewBox="0 0 400 320" class="w-full h-full">
+                            <!-- Left Chinese Character 培 -->
+                            <text x="15" y="170" font-family="'Kaiti SC', 'SimSun', serif" font-weight="bold" font-size="65" fill="#0f4c81">培</text>
+                            
+                            <!-- Center Emblem Circle -->
+                            <g transform="translate(70, 0)">
+                                <!-- Outer Blue Ring -->
+                                <circle cx="130" cy="130" r="125" fill="none" stroke="#0f4c81" stroke-width="12" />
+                                <circle cx="130" cy="130" r="113" fill="#ffffff" />
+                                <circle cx="130" cy="130" r="105" fill="#0f4c81" />
+                                
+                                <!-- Open Book (White Curves) -->
+                                <path d="M 35 155 Q 130 195 130 255 Q 130 195 225 155 Q 130 180 35 155 Z" fill="#ffffff" />
+                                <path d="M 45 160 Q 130 198 130 250 Q 130 198 215 160 Q 130 182 45 160 Z" fill="#0f4c81" />
+                                <path d="M 55 165 Q 130 200 130 245 Q 130 200 205 165 Z" fill="#ffffff" />
+
+                                <!-- Torch Base -->
+                                <path d="M 115 155 C 115 145, 145 145, 145 155 L 138 175 C 138 178, 122 178, 122 175 Z" fill="#ffffff" />
+                                
+                                <!-- Red Flame -->
+                                <path d="M 130 60 C 145 90, 155 105, 145 135 C 140 145, 120 145, 115 135 C 105 110, 120 95, 130 60 Z" fill="#dc2626" />
+                                <path d="M 134 75 C 142 95, 148 108, 140 130 C 136 138, 126 138, 124 130 C 118 112, 128 100, 134 75 Z" fill="#ffffff" opacity="0.3" />
+
+                                <!-- Bottom Text Arc: SJK (C) PEI HUA SEREMBAN -->
+                                <path id="textArc" d="M 20 155 A 115 115 0 0 0 240 155" fill="none" />
+                                <text font-family="Arial, sans-serif" font-weight="900" font-size="16" fill="#0f4c81">
+                                    <textPath href="#textArc" startOffset="50%" text-anchor="middle">
+                                        SJK (C) PEI HUA SEREMBAN
+                                    </textPath>
+                                </text>
+                            </g>
+
+                            <!-- Right Chinese Character 華 -->
+                            <text x="325" y="170" font-family="'Kaiti SC', 'SimSun', serif" font-weight="bold" font-size="65" fill="#0f4c81">華</text>
+                        </svg>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-xl sm:text-3xl font-extrabold tracking-tight text-white drop-shadow">e-PENCAPAIAN</h1>
+                            <span class="bg-flame-600 text-white text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow">Sistem Kokurikulum</span>
+                        </div>
+                        <p class="text-xs sm:text-sm font-semibold text-blue-200 tracking-wide mt-0.5">
+                            SJK (C) PEI HUA SEREMBAN <span class="hidden sm:inline text-blue-300 font-normal">|( 芙蓉培华国民型华文小学 )</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Header Actions -->
+                <div class="hidden md:flex items-center space-x-5">
+                    <div class="text-right">
+                        <p class="text-[11px] text-blue-200 uppercase tracking-widest font-bold">Penggal Sesi</p>
+                        <p class="text-sm font-extrabold text-amber-300">2026 / 2027</p>
+                    </div>
+                    <div class="h-8 w-px bg-blue-700"></div>
+                    <a href="#pendaftaran" class="bg-flame-600 hover:bg-flame-700 text-white font-bold px-4 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition flex items-center gap-2 text-xs uppercase tracking-wider">
+                        <i class="fa-solid fa-plus-circle text-sm"></i>
+                        <span>Daftar Aktiviti</span>
+                    </a>
                 </div>
             </div>
-            
-            <!-- Navigation (Buttons: Dashboard, Senarai, Borang) -->
-            <nav class="flex space-x-1 sm:space-x-2 bg-slate-950/40 p-1.5 rounded-xl border border-white/5 shrink-0 w-full sm:w-auto justify-center overflow-x-auto">
-                <button onclick="switchView('dashboard')" id="btn-dashboard" class="px-3 sm:px-5 py-2.5 bg-cyan-500/20 rounded-lg transition-all text-cyan-400 font-bold text-[10px] sm:text-xs uppercase whitespace-nowrap flex-1 sm:flex-none">Dashboard</button>
-                <button onclick="switchView('list')" id="btn-list" class="px-3 sm:px-5 py-2.5 hover:bg-white/5 rounded-lg transition-all text-slate-400 font-bold text-[10px] sm:text-xs uppercase whitespace-nowrap flex-1 sm:flex-none">Senarai</button>
-                <button onclick="switchView('form')" id="btn-form" class="px-3 sm:px-5 py-2.5 hover:bg-white/5 rounded-lg transition-all text-slate-400 font-bold text-[10px] sm:text-xs uppercase whitespace-nowrap flex-1 sm:flex-none">Borang</button>
-            </nav>
-        </header>
- 
-        <main class="flex-1 min-h-0 relative">
-            
-            <!-- VIEW 1: DASHBOARD -->
-            <section id="view-dashboard" class="h-full overflow-y-auto custom-scroll pr-1 sm:pr-3 space-y-4">
-                <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-12 lg:col-span-3 glass rounded-2xl p-4 sm:p-5 h-[350px] sm:h-[400px] flex flex-col">
-                        <h3 class="text-[10px] font-bold text-cyan-400 mb-4 tracking-widest uppercase shrink-0">Top 10 Pelajar Aktif</h3>
-                        <div id="top-students-list" class="flex-1 custom-scroll space-y-2 pr-2 text-xs"></div>
+        </div>
+    </header>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- FILTER BAR SECTION -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="p-3 bg-brand-50 text-brand-800 rounded-xl">
+                        <i class="fa-solid fa-filter text-lg"></i>
                     </div>
- 
-                    <!-- CENTRAL RADAR HUB -->
-                    <div class="col-span-12 lg:col-span-6 glass rounded-2xl h-[350px] sm:h-[400px] relative">
-                        <div id="orbit-container" class="relative w-full h-full flex items-center justify-center">
-                            <div id="orb-Antarabangsa" onclick="filterByOrb('Antarabangsa')" class="orb bg-cyan-900/40 border border-cyan-400 text-cyan-300" style="left: 42%; top: 5%;">INT</div>
-                            <div id="orb-Kebangsaan" onclick="filterByOrb('Kebangsaan')" class="orb bg-blue-900/40 border border-blue-400 text-blue-300" style="right: 15%; top: 25%;">KEB</div>
-                            <div id="orb-Negeri" onclick="filterByOrb('Negeri')" class="orb bg-purple-900/40 border border-purple-400 text-purple-300" style="right: 15%; bottom: 25%;">NEG</div>
-                            <div id="orb-Zon" onclick="filterByOrb('Zon')" class="orb bg-pink-900/40 border border-pink-400 text-pink-300" style="left: 42%; bottom: 5%;">ZON</div>
-                            <div id="orb-Daerah" onclick="filterByOrb('Daerah')" class="orb bg-orange-900/40 border border-orange-400 text-orange-300" style="left: 10%; bottom: 25%;">D</div>
-                            <div id="orb-Sekolah" onclick="filterByOrb('Sekolah')" class="orb bg-emerald-900/40 border border-emerald-400 text-emerald-300" style="left: 10%; top: 25%;">SEK</div>
-                           
-                            <div onclick="filterByOrb('SEMUA')" class="center-hub text-center p-4 sm:p-8 bg-slate-950/70 rounded-full border border-white/10 float-anim shadow-2xl">
-                                <p class="text-[7px] sm:text-[8px] font-bold text-slate-500 uppercase tracking-widest mb-1">Status Penapis</p>
-                                <p id="current-filter-label" class="text-[10px] sm:text-xs font-black text-cyan-400 uppercase italic">SEMUA REKOD</p>
+                    <div>
+                        <h2 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Penapis Peringkat Rekod</h2>
+                        <p class="text-xs text-slate-500">Pilih peringkat pertandingan untuk menapis paparan statistik dan pencapaian.</p>
+                    </div>
+                </div>
+
+                <!-- Level Filter Buttons -->
+                <div class="flex flex-wrap gap-2" id="filter-container">
+                    <button onclick="setFilter('SEMUA')" data-filter="SEMUA" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm bg-brand-800 text-white border border-brand-800">
+                        SEMUA REKOD
+                    </button>
+                    <button onclick="setFilter('INT')" data-filter="INT" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
+                        INT <span class="text-[10px] font-normal opacity-75">(Antarabangsa)</span>
+                    </button>
+                    <button onclick="setFilter('KEB')" data-filter="KEB" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
+                        KEB <span class="text-[10px] font-normal opacity-75">(Kebangsaan)</span>
+                    </button>
+                    <button onclick="setFilter('NEG')" data-filter="NEG" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
+                        NEG <span class="text-[10px] font-normal opacity-75">(Negeri)</span>
+                    </button>
+                    <button onclick="setFilter('ZON')" data-filter="ZON" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
+                        ZON <span class="text-[10px] font-normal opacity-75">(Zon)</span>
+                    </button>
+                    <button onclick="setFilter('D')" data-filter="D" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
+                        D <span class="text-[10px] font-normal opacity-75">(Daerah)</span>
+                    </button>
+                    <button onclick="setFilter('SEK')" data-filter="SEK" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
+                        SEK <span class="text-[10px] font-normal opacity-75">(Sekolah)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dynamic Filter Status -->
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span class="text-slate-600 font-medium">Status Penapis Semasa: <strong id="filter-status-text" class="text-brand-800 font-bold uppercase">SEMUA REKOD</strong></span>
+                <span id="filtered-count-badge" class="bg-blue-50 text-brand-800 px-3 py-1 rounded-full font-extrabold border border-blue-100">0 Rekod Ditemui</span>
+            </div>
+        </section>
+
+        <!-- DASHBOARD GRID LAYOUT -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- LEFT COLUMN: TOP 10 STUDENTS & TEACHERS -->
+            <div class="space-y-8 lg:col-span-1">
+                
+                <!-- TOP 10 PELAJAR AKTIF -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl">
+                                <i class="fa-solid fa-trophy text-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-base">Top 10 Pelajar Aktif</h3>
+                                <p class="text-xs text-slate-500">Mengikut Pengumpulan Merit</p>
                             </div>
                         </div>
+                        <span class="text-[11px] font-extrabold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg">MERIT</span>
                     </div>
- 
-                    <div class="col-span-12 lg:col-span-3 glass rounded-2xl p-4 sm:p-5 h-[350px] sm:h-[400px] flex flex-col">
-                        <h3 class="text-[10px] font-bold text-emerald-400 mb-4 tracking-widest uppercase shrink-0">Pencapaian Terkini</h3>
-                        <div id="recent-logs" class="flex-1 custom-scroll space-y-3 pr-2 text-xs"></div>
+
+                    <div id="top-students-list" class="space-y-3 overflow-y-auto max-h-[380px] pr-1">
+                        <!-- Dynamic Student Content -->
                     </div>
                 </div>
- 
-                <div class="grid grid-cols-12 gap-4 pb-4">
-                    <div class="col-span-12 lg:col-span-6 glass rounded-2xl p-4 sm:p-5 h-[300px]">
-                        <h3 class="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-widest">Graf Ringkasan Pencapaian</h3>
-                        <div class="h-[220px]"><canvas id="achievementsChart"></canvas></div>
-                    </div>
- 
-                    <div class="col-span-12 lg:col-span-3 glass rounded-2xl p-4 sm:p-5 flex flex-col items-center justify-center text-center h-[250px] sm:h-[300px]">
-                        <h3 class="text-[10px] font-bold text-amber-400 mb-4 tracking-widest uppercase shrink-0">Top Performer</h3>
-                        <div class="bg-gradient-to-br from-amber-400/20 to-yellow-600/20 p-4 sm:p-6 rounded-full border border-amber-400/40 mb-3 shadow-2xl relative">
-                            <svg class="w-8 h-8 sm:w-12 sm:h-12 text-amber-400 shiny-star relative z-10" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                            </svg>
+
+                <!-- GURU PALING AKTIF -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6">
+                    <div class="flex items-center space-x-3 pb-4 border-b border-slate-100 mb-4">
+                        <div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
+                            <i class="fa-solid fa-chalkboard-user text-lg"></i>
                         </div>
-                        <p id="tokoh-nama" class="text-sm font-bold uppercase text-white truncate w-full px-2">Memuatkan...</p>
-                        <p id="tokoh-merit" class="text-[11px] text-amber-400 font-black mt-1 uppercase">0 Merit</p>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">Guru Paling Aktif</h3>
+                            <p class="text-xs text-slate-500">Guru Pembimbing Pertandingan</p>
+                        </div>
                     </div>
- 
-                    <div class="col-span-12 lg:col-span-3 glass rounded-2xl p-4 sm:p-5 h-[250px] sm:h-[300px] flex flex-col">
-                        <h3 class="text-[10px] font-bold text-purple-400 mb-4 tracking-widest uppercase shrink-0">Guru Paling Aktif</h3>
-                        <div id="top-teachers-list" class="flex-1 custom-scroll space-y-2 pr-2 text-xs"></div>
-                    </div>
-                </div>
-            </section>
- 
-            <!-- VIEW 2: SENARAI PELAJAR -->
-            <section id="view-list" class="glass rounded-2xl p-4 sm:p-6 hidden flex flex-col h-full overflow-hidden text-xs">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 shrink-0 gap-4">
-                    <h2 class="text-lg sm:text-xl font-header font-bold text-cyan-400 uppercase tracking-tighter">Pangkalan Data Pelajar</h2>
-                    <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                        <input type="text" id="search-input" onkeyup="searchTable()" placeholder="Cari murid..." class="bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 sm:py-2 text-sm sm:text-xs text-white outline-none focus:border-cyan-400 flex-1 sm:w-64 transition-all order-2 sm:order-1">
-                        <button onclick="generatePDFReport()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 sm:px-5 py-3 sm:py-2 rounded-xl text-[10px] sm:text-[10px] font-bold uppercase transition-all shadow-lg shrink-0 order-1 sm:order-2 w-full sm:w-auto">Jana PDF</button>
+
+                    <div id="top-teachers-list" class="space-y-3">
+                        <!-- Dynamic Teacher List -->
                     </div>
                 </div>
-                <div class="flex-1 overflow-x-auto overflow-y-auto custom-scroll border border-white/5 rounded-xl">
-                    <table class="w-full text-left min-w-[500px] sm:min-w-full" id="dataTable">
-                        <thead class="sticky top-0 z-20 bg-[#0f172a]/95 backdrop-blur-md">
-                            <tr class="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b border-white/10">
-                                <th class="p-3 sm:p-4">Pelajar</th>
-                                <th class="p-3 sm:p-4 hidden sm:table-cell">Program</th>
-                                <th class="p-3 sm:p-4">Peringkat</th>
-                                <th class="p-3 sm:p-4 text-center">Merit</th>
-                                <th class="p-3 sm:p-4 text-right">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pangkalan-data-body" class="divide-y divide-white/5"></tbody>
-                    </table>
-                </div>
-            </section>
- 
-            <!-- VIEW 3: BORANG LAPORAN -->
-            <section id="view-form" class="h-full hidden overflow-y-auto custom-scroll p-2 sm:p-4">
-                <div class="min-h-full flex items-center justify-center py-6">
-                    <div class="glass rounded-3xl p-6 sm:p-10 w-full max-w-2xl my-auto shadow-2xl">
-                        <h2 class="text-xl sm:text-2xl font-black mb-6 sm:mb-8 text-cyan-400 uppercase text-center tracking-widest leading-tight">Pendaftaran Aktiviti</h2>
-                        <form id="entry-form" class="grid grid-cols-2 gap-4 sm:gap-5 text-xs">
-                            <div class="col-span-2 space-y-2">
-                                <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Senarai Murid (Huruf Besar)</label>
-                                <div id="student-name-container" class="space-y-3">
-                                    <div class="flex space-x-2">
-                                        <input type="text" placeholder="NAMA PENUH MURID" class="student-name-input flex-1 bg-slate-950/40 border border-white/10 rounded-xl p-3 sm:p-4 outline-none focus:border-cyan-400 font-bold text-sm sm:text-[11px] uppercase text-white">
-                                        <button type="button" onclick="addNameField()" class="bg-cyan-500/10 text-cyan-400 w-12 rounded-xl hover:bg-cyan-500 hover:text-white transition-all font-bold text-xl">+</button>
-                                    </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: SPOTLIGHT, METRICS & CHARTS -->
+            <div class="space-y-8 lg:col-span-2">
+                
+                <!-- TOP PERFORMER SPOTLIGHT & METRICS -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- Top Performer Hero Card -->
+                    <div class="md:col-span-2 bg-gradient-to-br from-brand-900 via-brand-800 to-blue-900 rounded-2xl shadow-lg p-6 text-white relative overflow-hidden flex flex-col justify-between border border-brand-700">
+                        <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-amber-400/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="absolute top-4 right-4 text-amber-400 opacity-20 text-7xl font-black">#1</div>
+                        
+                        <div class="flex items-center space-x-2 text-amber-300 font-semibold text-xs uppercase tracking-wider mb-2">
+                            <i class="fa-solid fa-crown text-amber-400"></i>
+                            <span>Pelajar Cemerlang SJKC Pei Hua</span>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-center gap-5 z-10 my-2">
+                            <div class="relative">
+                                <img id="top-performer-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=TanWeiMing" alt="Top Performer Avatar" class="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-white p-1 border-2 border-amber-400 shadow-xl object-cover">
+                            </div>
+                            <div class="text-center sm:text-left space-y-1">
+                                <h4 id="top-performer-name" class="text-xl sm:text-2xl font-extrabold text-white">Lim Jia Wei</h4>
+                                <p id="top-performer-class" class="text-blue-200 text-xs font-semibold">Tahun 6 Hwa • SJK (C) Pei Hua Seremban</p>
+                                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-xl text-xs font-medium text-amber-300 mt-2">
+                                    <i class="fa-solid fa-medal"></i>
+                                    <span id="top-performer-achievements-count">Kejayaan Terbanyak Peringkat Tinggi</span>
                                 </div>
                             </div>
-                            <div class="col-span-2">
-                                <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Program / Aktiviti</label>
-                                <input type="text" id="f_program" required class="w-full bg-slate-950/40 border border-white/10 rounded-xl p-3 sm:p-4 outline-none focus:border-cyan-400 uppercase text-white text-sm sm:text-xs">
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-blue-100 z-10">
+                            <span>Jumlah Merit Terumpul:</span>
+                            <span id="top-performer-merit" class="text-xl font-extrabold text-amber-300">0 Merit</span>
+                        </div>
+                    </div>
+
+                    <!-- Summary Stats Cards -->
+                    <div class="space-y-4 flex flex-col justify-between">
+                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center space-x-4">
+                            <div class="p-3 bg-blue-50 text-brand-800 rounded-xl">
+                                <i class="fa-solid fa-award text-xl"></i>
                             </div>
-                            <div class="col-span-2 sm:col-span-1">
-                                <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Peringkat</label>
-                                <select id="f_peringkat" class="w-full bg-slate-900 border border-white/10 rounded-xl p-3 sm:p-4 outline-none focus:border-cyan-400 text-white text-sm sm:text-xs">
-                                    <option value="Antarabangsa">Antarabangsa</option>
-                                    <option value="Kebangsaan">Kebangsaan</option>
-                                    <option value="Negeri">Negeri</option>
-                                    <option value="Zon">Zon</option>
-                                    <option value="Daerah">Daerah</option>
-                                    <option value="Sekolah">Sekolah</option>
-                                </select>
+                            <div>
+                                <p class="text-[11px] text-slate-500 font-bold uppercase">Jumlah Kejayaan</p>
+                                <p id="stat-total-achievements" class="text-xl font-extrabold text-slate-800">0</p>
+                                <p class="text-[10px] text-brand-600 font-medium">Rekod Berdaftar</p>
                             </div>
-                            <div class="col-span-2 sm:col-span-1">
-                                <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Pencapaian</label>
-                                <select id="f_pencapaian" class="w-full bg-slate-900 border border-white/10 rounded-xl p-3 sm:p-4 outline-none focus:border-cyan-400 text-white text-sm sm:text-xs">
-                                    <option value="Johan">Emas / Johan</option>
-                                    <option value="Naib Johan">Perak / Naib Johan</option>
-                                    <option value="Ketiga">Gangsa / Ketiga</option>
-                                    <option value="Penyertaan">Penyertaan</option>
-                                </select>
+                        </div>
+
+                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center space-x-4">
+                            <div class="p-3 bg-purple-50 text-purple-600 rounded-xl">
+                                <i class="fa-solid fa-users text-xl"></i>
                             </div>
-                            <div class="col-span-2 sm:col-span-1">
-                                <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Tarikh Aktiviti</label>
-                                <input type="date" id="f_tarikh" required class="w-full bg-slate-900 border border-white/10 rounded-xl p-3 sm:p-4 outline-none focus:border-cyan-400 text-white text-sm sm:text-xs">
+                            <div>
+                                <p class="text-[11px] text-slate-500 font-bold uppercase">Pelajar Terlibat</p>
+                                <p id="stat-total-students" class="text-xl font-extrabold text-slate-800">0</p>
+                                <p class="text-[10px] text-purple-600 font-medium">Penerima Merit</p>
                             </div>
-                            <div class="col-span-2 sm:col-span-1">
-                                <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Guru Pengiring</label>
-                                <input type="text" id="f_guru" placeholder="NAMA GURU" required class="w-full bg-slate-900 border border-white/10 rounded-xl p-3 sm:p-4 outline-none focus:border-cyan-400 uppercase text-white text-sm sm:text-xs">
+                        </div>
+
+                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center space-x-4">
+                            <div class="p-3 bg-flame-50 text-flame-600 rounded-xl">
+                                <i class="fa-solid fa-fire text-xl"></i>
                             </div>
-                            <div class="col-span-2 pt-6 sm:pt-8">
-                                <button type="button" onclick="saveAktiviti()" class="w-full bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white font-black py-4 sm:py-5 rounded-2xl transition-all shadow-xl uppercase tracking-widest">Simpan Data Sistem</button>
+                            <div>
+                                <p class="text-[11px] text-slate-500 font-bold uppercase">Purata Merit</p>
+                                <p id="stat-avg-merit" class="text-xl font-extrabold text-slate-800">0</p>
+                                <p class="text-[10px] text-flame-600 font-medium">Skor Per Aktiviti</p>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
-            </section>
-        </main>
-    </div>
- 
+
+                <!-- GRAF RINGKASAN PENCAPAIAN CHART -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-2 mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2.5 bg-blue-50 text-brand-800 rounded-xl">
+                                <i class="fa-solid fa-chart-column text-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-base">Graf Ringkasan Pencapaian</h3>
+                                <p class="text-xs text-slate-500">Agihan Program Mengikut Peringkat Pertandingan</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Chart Container -->
+                    <div class="relative h-64 sm:h-72 w-full">
+                        <canvas id="chartCanvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- PENCAPAIAN TERKINI FEED -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6">
+                    <div class="flex items-center space-x-3 pb-4 border-b border-slate-100 mb-4">
+                        <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
+                            <i class="fa-solid fa-bolt text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">Pencapaian Terkini</h3>
+                            <p class="text-xs text-slate-500">Kemas kini langsung penglibatan & kejayaan pelajar SJKC Pei Hua</p>
+                        </div>
+                    </div>
+
+                    <div id="recent-achievements-feed" class="space-y-3">
+                        <!-- Dynamic Feed Loaded Via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SECTION: PANGKALAN DATA PELAJAR (DATABASE TABLE) -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 bg-brand-50 text-brand-800 rounded-xl">
+                        <i class="fa-solid fa-database text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">Pangkalan Data Pelajar</h2>
+                        <p class="text-xs text-slate-500">Senarai rekod lengkap pencapaian murid SJK (C) Pei Hua Seremban</p>
+                    </div>
+                </div>
+
+                <!-- Search & Filters -->
+                <div class="flex flex-col sm:flex-row items-center gap-3">
+                    <div class="relative w-full sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="table-search" placeholder="Cari nama, program..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-brand-800 focus:bg-white transition">
+                    </div>
+                    <select id="category-filter" onchange="renderTable()" class="w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-800">
+                        <option value="ALL">Semua Kategori</option>
+                        <option value="Akademik">Akademik / STEM</option>
+                        <option value="Sukan">Sukan & Permainan</option>
+                        <option value="Seni">Seni & Kebudayaan</option>
+                        <option value="Ko-Kurikulum">Ko-Kurikulum / Kelab</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Responsive Table -->
+            <div class="overflow-x-auto rounded-xl border border-slate-100">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-500 text-[11px] font-extrabold uppercase tracking-wider border-b border-slate-200">
+                            <th class="py-3.5 px-4">Pelajar</th>
+                            <th class="py-3.5 px-4">Program / Pertandingan</th>
+                            <th class="py-3.5 px-4">Peringkat</th>
+                            <th class="py-3.5 px-4 text-center">Merit</th>
+                            <th class="py-3.5 px-4 text-center">Tarikh</th>
+                            <th class="py-3.5 px-4 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-table-body" class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
+                        <!-- Dynamic Rows loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Table Pagination -->
+            <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3 pt-2">
+                <p id="table-pagination-info">Menunjukkan 0 daripada 0 rekod</p>
+                <div class="flex items-center space-x-1">
+                    <button onclick="prevPage()" id="btn-prev-page" class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 font-bold disabled:opacity-50 disabled:cursor-not-allowed">Sebelumnya</button>
+                    <span id="page-num-display" class="px-3 py-1 bg-brand-50 text-brand-800 font-extrabold rounded-lg">1</span>
+                    <button onclick="nextPage()" id="btn-next-page" class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 font-bold disabled:opacity-50 disabled:cursor-not-allowed">Seterusnya</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: PENDAFTARAN AKTIVITI (REGISTRATION FORM) -->
+        <section id="pendaftaran" class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6">
+            <div class="flex items-center space-x-3 pb-4 border-b border-slate-100 mb-6">
+                <div class="p-2.5 bg-flame-50 text-flame-600 rounded-xl">
+                    <i class="fa-solid fa-pen-to-square text-lg"></i>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800">Pendaftaran Aktiviti Baru</h2>
+                    <p class="text-xs text-slate-500">Borang pendaftaran rekod pencapaian pelajar SJK (C) Pei Hua Seremban</p>
+                </div>
+            </div>
+
+            <form id="activity-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Nama Pelajar -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-slate-700">Nama Pelajar <span class="text-flame-600">*</span></label>
+                        <div class="relative">
+                            <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input type="text" id="form-student" required placeholder="Cth: Tan Wei Ming" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-800 focus:bg-white focus:outline-none transition">
+                        </div>
+                    </div>
+
+                    <!-- Kelas -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-slate-700">Tahun / Kelas <span class="text-flame-600">*</span></label>
+                        <select id="form-class" required class="w-full bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 px-3 py-2.5 focus:ring-2 focus:ring-brand-800 focus:bg-white focus:outline-none transition">
+                            <option value="">Pilih Kelas</option>
+                            <option value="Tahun 4 Zhong">Tahun 4 Zhong (培)</option>
+                            <option value="Tahun 4 Xiao">Tahun 4 Xiao (华)</option>
+                            <option value="Tahun 5 Ren">Tahun 5 Ren (仁)</option>
+                            <option value="Tahun 5 Ai">Tahun 5 Ai (爱)</option>
+                            <option value="Tahun 6 Hwa">Tahun 6 Hwa (华)</option>
+                            <option value="Tahun 6 Ping">Tahun 6 Ping (平)</option>
+                        </select>
+                    </div>
+
+                    <!-- Nama Program -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-slate-700">Nama Program / Pertandingan <span class="text-flame-600">*</span></label>
+                        <div class="relative">
+                            <i class="fa-solid fa-trophy absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input type="text" id="form-program" required placeholder="Cth: Kejohanan Ping Pong MSSNS Negeri Sembilan" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-800 focus:bg-white focus:outline-none transition">
+                        </div>
+                    </div>
+
+                    <!-- Peringkat -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-slate-700">Peringkat <span class="text-flame-600">*</span></label>
+                        <select id="form-level" required class="w-full bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 px-3 py-2.5 focus:ring-2 focus:ring-brand-800 focus:bg-white focus:outline-none transition">
+                            <option value="INT">Antarabangsa (INT)</option>
+                            <option value="KEB">Kebangsaan (KEB)</option>
+                            <option value="NEG">Negeri (NEG)</option>
+                            <option value="ZON">Zon (ZON)</option>
+                            <option value="D">Daerah (D)</option>
+                            <option value="SEK" selected>Sekolah (SEK)</option>
+                        </select>
+                    </div>
+
+                    <!-- Kategori -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-slate-700">Kategori <span class="text-flame-600">*</span></label>
+                        <select id="form-category" required class="w-full bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 px-3 py-2.5 focus:ring-2 focus:ring-brand-800 focus:bg-white focus:outline-none transition">
+                            <option value="Akademik">Akademik / STEM</option>
+                            <option value="Sukan">Sukan & Permainan</option>
+                            <option value="Seni">Seni & Kebudayaan</option>
+                            <option value="Ko-Kurikulum">Ko-Kurikulum / Kelab</option>
+                        </select>
+                    </div>
+
+                    <!-- Merit Points & Guru -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-bold text-slate-700">Markah Merit <span class="text-flame-600">*</span></label>
+                            <input type="number" id="form-merit" required min="5" max="300" value="50" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-brand-800 focus:bg-white focus:outline-none transition">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-bold text-slate-700">Guru Pembimbing</label>
+                            <input type="text" id="form-teacher" placeholder="Cth: Cikgu Lee Kah Sheng" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-800 focus:bg-white focus:outline-none transition">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Submit Action -->
+                <div class="flex items-center justify-end space-x-3 pt-4 border-t border-slate-100">
+                    <button type="reset" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition">
+                        Reset Borang
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 bg-brand-800 hover:bg-brand-900 text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition flex items-center space-x-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Simpan & Kemaskini Pangkalan Data</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+            <div class="flex items-center justify-center space-x-2 text-white font-bold text-sm">
+                <span>SJK (C) PEI HUA SEREMBAN</span>
+                <span>•</span>
+                <span class="text-amber-400">芙蓉培华国民型华文小学</span>
+            </div>
+            <p>© 2026 SJK (C) Pei Hua Seremban. Portal e-PENCAPAIAN Pengurusan Merit & Rekod Kokurikulum.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxnPlSUkaMQztd9PJsO4OOGagOpU1MVQpiaDyBroQ-jO2fiSA3bG7HcqdyC-1v-0W4r/exec";
- 
-        let studentsData = [];
+        // Initial Dataset for SJK (C) PEI HUA SEREMBAN
+        let achievementsData = [
+            {
+                id: 1,
+                student: "Lim Jia Wei",
+                class: "Tahun 6 Hwa",
+                program: "World International Mathematical Olympiad (WIMO)",
+                level: "INT",
+                category: "Akademik",
+                merit: 150,
+                teacher: "Cikgu Tan Bee Leng",
+                date: "2026-03-12"
+            },
+            {
+                id: 2,
+                student: "Chong Ming Jun",
+                class: "Tahun 5 Ren",
+                program: "Kejohanan Ping Pong MSSM Kebangsaan",
+                level: "KEB",
+                category: "Sukan",
+                merit: 120,
+                teacher: "Encik Lee Kah Sheng",
+                date: "2026-03-18"
+            },
+            {
+                id: 3,
+                student: "Lim Jia Wei",
+                class: "Tahun 6 Hwa",
+                program: "Pertandingan Robotik Kebangsaan (NRC)",
+                level: "KEB",
+                category: "Akademik",
+                merit: 110,
+                teacher: "Cikgu Tan Bee Leng",
+                date: "2026-02-25"
+            },
+            {
+                id: 4,
+                student: "Khoo Zi Ying",
+                class: "Tahun 6 Ping",
+                program: "Pertandingan Tarian Kebudayaan Negeri Sembilan",
+                level: "NEG",
+                category: "Seni",
+                merit: 90,
+                teacher: "Puan Lim Mei Ling",
+                date: "2026-02-10"
+            },
+            {
+                id: 5,
+                student: "Teoh Xian Sheng",
+                class: "Tahun 4 Zhong",
+                program: "Kejohanan Catur MSSD Seremban",
+                level: "ZON",
+                category: "Sukan",
+                merit: 75,
+                teacher: "Encik Lee Kah Sheng",
+                date: "2026-01-29"
+            },
+            {
+                id: 6,
+                student: "Wong Xuan Lei",
+                class: "Tahun 5 Ai",
+                program: "Pertandingan Syarahan Bahasa Melayu Daerah Seremban",
+                level: "D",
+                category: "Akademik",
+                merit: 80,
+                teacher: "Puan Noor Azlina",
+                date: "2026-03-01"
+            },
+            {
+                id: 7,
+                student: "Lim Jia Wei",
+                class: "Tahun 6 Hwa",
+                program: "Kangaroo Math Competition Global",
+                level: "INT",
+                category: "Akademik",
+                merit: 140,
+                teacher: "Cikgu Tan Bee Leng",
+                date: "2026-01-15"
+            },
+            {
+                id: 8,
+                student: "Ng Hui Leng",
+                class: "Tahun 4 Xiao",
+                program: "Pertandingan Melukis Poster Alam Sekitar Sekolah",
+                level: "SEK",
+                category: "Seni",
+                merit: 45,
+                teacher: "Puan Lim Mei Ling",
+                date: "2026-02-14"
+            },
+            {
+                id: 9,
+                student: "Chong Ming Jun",
+                class: "Tahun 5 Ren",
+                program: "Kejohanan Renang Antara Sekolah Negeri",
+                level: "NEG",
+                category: "Sukan",
+                merit: 95,
+                teacher: "Encik Lee Kah Sheng",
+                date: "2026-03-05"
+            }
+        ];
+
+        // Global State
         let currentFilter = 'SEMUA';
+        let currentPage = 1;
+        const rowsPerPage = 5;
         let chartInstance = null;
 
-        function showLoading(isLoading) {
-            document.getElementById('loading').style.display = isLoading ? 'flex' : 'none';
-        }
- 
-        async function fetchDataFromGoogle() {
-            showLoading(true);
-            try {
-                const response = await fetch(SCRIPT_URL + "?action=read");
-                const result = await response.json();
-                studentsData = result.data || [];
-                updateUI();
-            } catch (error) {
-                console.error("Sync Error:", error);
-                alert("Gagal menyambung ke Cloud. Sila muat semula.");
-            } finally {
-                showLoading(false);
-            }
-        }
- 
-        async function saveAktiviti() {
-            const meritMap = { "Antarabangsa": 17, "Kebangsaan": 14, "Negeri": 11, "Zon": 8, "Daerah": 8, "Sekolah": 5 };
-            const program = document.getElementById('f_program').value.toUpperCase();
-            const peringkat = document.getElementById('f_peringkat').value;
-            const pencapaian = document.getElementById('f_pencapaian').value;
-            const tarikh = document.getElementById('f_tarikh').value;
-            const guru = document.getElementById('f_guru').value.toUpperCase();
-            const inputs = document.querySelectorAll('.student-name-input');
-            
-            const records = [];
-            inputs.forEach(input => {
-                const nama = input.value.trim().toUpperCase();
-                if (nama && program && tarikh) {
-                    records.push({ nama, program, peringkat, pencapaian, merit: meritMap[peringkat], tarikh, guru });
+        // Badge Styling Mapping
+        const levelBadges = {
+            'INT': { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-300', full: 'Antarabangsa' },
+            'KEB': { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-300', full: 'Kebangsaan' },
+            'NEG': { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-300', full: 'Negeri' },
+            'ZON': { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-300', full: 'Zon' },
+            'D':   { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-300', full: 'Daerah' },
+            'SEK': { bg: 'bg-slate-100', text: 'text-slate-700', border: 'border-slate-300', full: 'Sekolah' }
+        };
+
+        // DOM Loaded Init
+        window.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            refreshDashboard();
+
+            document.getElementById('table-search').addEventListener('input', () => {
+                currentPage = 1;
+                renderTable();
+            });
+        });
+
+        // Level Filter Action
+        function setFilter(level) {
+            currentFilter = level;
+            currentPage = 1;
+
+            document.querySelectorAll('#filter-container button').forEach(btn => {
+                if (btn.dataset.filter === level) {
+                    btn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm bg-brand-800 text-white border border-brand-800";
+                } else {
+                    btn.className = "filter-btn px-3.5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200";
                 }
             });
- 
-            if (records.length === 0) return alert("Sila isi maklumat murid.");
- 
-            showLoading(true);
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: "create", data: records })
-                });
- 
-                alert("Data Berhasil Dihantar!");
-                document.getElementById('entry-form').reset();
-                setTimeout(fetchDataFromGoogle, 2000);
-                switchView('dashboard');
-            } catch (error) {
-                alert("Ralat penghantaran.");
-            } finally {
-                showLoading(false);
-            }
+
+            const statusText = level === 'SEMUA' ? 'SEMUA REKOD' : `PERINGKAT ${levelBadges[level].full.toUpperCase()} (${level})`;
+            document.getElementById('filter-status-text').innerText = statusText;
+
+            refreshDashboard();
+            showToast(`Menapis mengikut: ${statusText}`);
         }
- 
-        async function deleteRecord(nama, program) {
-            if(!confirm(`Padam rekod ${nama} - ${program}?`)) return;
-            showLoading(true);
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: "delete", nama: nama, program: program })
-                });
-                setTimeout(fetchDataFromGoogle, 2000);
-            } catch (error) {
-                alert("Gagal memadam.");
-                showLoading(false);
-            }
+
+        function getFilteredData() {
+            if (currentFilter === 'SEMUA') return achievementsData;
+            return achievementsData.filter(item => item.level === currentFilter);
         }
- 
-        async function generatePDFReport() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('l', 'mm', 'a4');
-            doc.text("LAPORAN PENCAPAIAN KOKURIKULUM SMKA TUN AHMADSHAH", 14, 20);
-            const rows = studentsData.map(s => [s.nama, s.program, s.peringkat, s.tarikh, s.merit]);
-            doc.autoTable({ startY: 30, head: [['Pelajar', 'Program', 'Peringkat', 'Tarikh', 'Merit']], body: rows, theme: 'grid' });
-            const pdfBase64 = doc.output('datauristring').split(',')[1];
-            if (confirm("Hantar salinan ke Drive?")) {
-                showLoading(true);
-                try {
-                    await fetch(SCRIPT_URL, {
-                        method: "POST",
-                        mode: "no-cors",
-                        body: JSON.stringify({ action: "uploadPDF", file: pdfBase64, filename: `Report_${Date.now()}.pdf` })
-                    });
-                    doc.save("Laporan_Koku.pdf");
-                } catch (e) { console.error(e); } finally { showLoading(false); }
-            } else {
-                doc.save("Laporan_Koku.pdf");
-            }
-        }
- 
-        function updateUI() {
-            const filtered = currentFilter === 'SEMUA' ? studentsData : studentsData.filter(d => d.peringkat === currentFilter);
-            
-            let counts = {}; filtered.forEach(s => counts[s.nama] = (counts[s.nama] || 0) + 1);
-            let sortedS = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0, 10);
-            document.getElementById('top-students-list').innerHTML = sortedS.map(([n, c], i) => `
-                <div class="flex items-center space-x-3 p-3 bg-white/10 rounded-xl border border-white/5">
-                    <span class="text-cyan-600 font-black">${i+1}</span>
-                    <p class="flex-1 font-bold uppercase truncate text-slate-100">${n}</p>
-                    <span class="text-cyan-400 font-bold">${c} AKT</span>
-                </div>
-            `).join('');
- 
-            let tCounts = {}; filtered.forEach(s => tCounts[s.guru] = (tCounts[s.guru] || 0) + 1);
-            let sortedT = Object.entries(tCounts).sort((a,b) => b[1]-a[1]).slice(0, 5);
-            document.getElementById('top-teachers-list').innerHTML = sortedT.map(([n, c]) => `
-                <div class="p-2.5 border-b border-white/10 flex justify-between text-slate-300"><span>${n}</span><span class="text-purple-400 font-bold">${c} PROG</span></div>
-            `).join('');
- 
-            let merits = {}; studentsData.forEach(s => merits[s.nama] = (merits[s.nama] || 0) + Number(s.merit));
-            let tokoh = Object.entries(merits).sort((a,b) => b[1]-a[1])[0];
-            if(tokoh) {
-                document.getElementById('tokoh-nama').innerText = tokoh[0];
-                document.getElementById('tokoh-merit').innerText = tokoh[1] + " MERIT KESELURUHAN";
-            } else {
-                document.getElementById('tokoh-nama').innerText = "Tiada Rekod";
-                document.getElementById('tokoh-merit').innerText = "0 Merit";
-            }
- 
-            const logColors = { "Antarabangsa": "border-amber-500 text-amber-400", "Kebangsaan": "border-blue-500 text-blue-400", "Negeri": "border-purple-500 text-purple-400", "Zon": "border-pink-500 text-pink-400", "Daerah": "border-orange-500 text-orange-400", "Sekolah": "border-emerald-500 text-emerald-400" };
-            document.getElementById('recent-logs').innerHTML = filtered.slice(-8).reverse().map(l => `
-                <div class="p-3 log-item bg-slate-900/60 rounded-r-xl shadow-lg border-l-4 ${logColors[l.peringkat] || 'border-slate-500 text-slate-400'} mb-2">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-[8px] font-black uppercase tracking-tighter">${l.peringkat}</span>
-                        <span class="text-[8px] opacity-60 font-mono">${l.tarikh}</span>
-                    </div>
-                    <b class="text-white text-[10px] uppercase block truncate">${l.program}</b>
-                    <span class="uppercase text-[9px] block truncate opacity-90 font-bold">${l.nama}</span>
-                </div>
-            `).join('');
- 
-            updateChart(filtered);
+
+        function refreshDashboard() {
+            const data = getFilteredData();
+            document.getElementById('filtered-count-badge').innerText = `${data.length} Rekod Ditemui`;
+
+            renderStats(data);
+            renderTopStudents(data);
+            renderTopTeachers(data);
+            renderTopPerformer(data);
+            renderRecentFeed(data);
             renderTable();
+            updateChart();
         }
- 
-        function updateChart(data) {
-            const stats = { Johan: 0, "Naib Johan": 0, Ketiga: 0, Penyertaan: 0 };
-            data.forEach(d => { if(stats[d.pencapaian] !== undefined) stats[d.pencapaian]++; });
-            const ctx = document.getElementById('achievementsChart').getContext('2d');
-            if (chartInstance) chartInstance.destroy();
+
+        // Summary Statistics
+        function renderStats(data) {
+            document.getElementById('stat-total-achievements').innerText = data.length;
+
+            const uniqueStudents = new Set(data.map(d => d.student));
+            document.getElementById('stat-total-students').innerText = uniqueStudents.size;
+
+            const totalMerit = data.reduce((acc, curr) => acc + curr.merit, 0);
+            const avgMerit = data.length > 0 ? Math.round(totalMerit / data.length) : 0;
+            document.getElementById('stat-avg-merit').innerText = avgMerit;
+        }
+
+        // Top 10 Active Students Leaderboard
+        function renderTopStudents(data) {
+            const container = document.getElementById('top-students-list');
+            container.innerHTML = '';
+
+            const studentMeritMap = {};
+            data.forEach(item => {
+                if (!studentMeritMap[item.student]) {
+                    studentMeritMap[item.student] = { name: item.student, class: item.class, totalMerit: 0, count: 0 };
+                }
+                studentMeritMap[item.student].totalMerit += item.merit;
+                studentMeritMap[item.student].count += 1;
+            });
+
+            const sortedStudents = Object.values(studentMeritMap)
+                .sort((a, b) => b.totalMerit - a.totalMerit)
+                .slice(0, 10);
+
+            if (sortedStudents.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-xs text-slate-400">Tiada rekod pelajar.</div>`;
+                return;
+            }
+
+            sortedStudents.forEach((st, idx) => {
+                const rankColor = idx === 0 ? 'bg-amber-400 text-brand-900 font-extrabold shadow' : 
+                                  idx === 1 ? 'bg-slate-300 text-slate-800 font-bold' : 
+                                  idx === 2 ? 'bg-amber-700 text-white font-bold' : 'bg-slate-100 text-slate-600 font-medium';
+
+                const avatarSeed = encodeURIComponent(st.name);
+
+                container.innerHTML += `
+                    <div class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs ${rankColor}">
+                                ${idx + 1}
+                            </span>
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${avatarSeed}" class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200" alt="Avatar">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800">${st.name}</h4>
+                                <p class="text-[10px] text-slate-500">${st.class} • ${st.count} Penyertaan</p>
+                            </div>
+                        </div>
+                        <span class="bg-emerald-50 text-emerald-700 font-extrabold text-xs px-2.5 py-1 rounded-lg border border-emerald-100">
+                            +${st.totalMerit}
+                        </span>
+                    </div>
+                `;
+            });
+        }
+
+        // Active Teachers
+        function renderTopTeachers(data) {
+            const container = document.getElementById('top-teachers-list');
+            container.innerHTML = '';
+
+            const teacherMap = {};
+            data.forEach(item => {
+                const tName = item.teacher || "Guru Pembimbing";
+                if (!teacherMap[tName]) teacherMap[tName] = 0;
+                teacherMap[tName] += 1;
+            });
+
+            const sortedTeachers = Object.entries(teacherMap)
+                .map(([name, count]) => ({ name, count }))
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 4);
+
+            if (sortedTeachers.length === 0) {
+                container.innerHTML = `<div class="text-center py-4 text-xs text-slate-400">Tiada rekod guru.</div>`;
+                return;
+            }
+
+            sortedTeachers.forEach((t) => {
+                container.innerHTML += `
+                    <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 text-brand-800 flex items-center justify-center text-xs font-bold">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">${t.name}</p>
+                                <p class="text-[10px] text-slate-500">Guru Pembimbing SJKC Pei Hua</p>
+                            </div>
+                        </div>
+                        <span class="bg-blue-50 text-brand-800 font-bold text-[11px] px-2.5 py-0.5 rounded-md border border-blue-100">
+                            ${t.count} Program
+                        </span>
+                    </div>
+                `;
+            });
+        }
+
+        // Top Performer Hero Card
+        function renderTopPerformer(data) {
+            const studentMap = {};
+            achievementsData.forEach(item => {
+                if (!studentMap[item.student]) {
+                    studentMap[item.student] = { name: item.student, class: item.class, merit: 0, highCount: 0 };
+                }
+                studentMap[item.student].merit += item.merit;
+                if (['INT', 'KEB', 'NEG'].includes(item.level)) {
+                    studentMap[item.student].highCount += 1;
+                }
+            });
+
+            const top = Object.values(studentMap).sort((a, b) => b.merit - a.merit)[0];
+
+            if (top) {
+                document.getElementById('top-performer-name').innerText = top.name;
+                document.getElementById('top-performer-class').innerText = `${top.class} • SJK (C) Pei Hua Seremban`;
+                document.getElementById('top-performer-merit').innerText = `${top.merit} Merit`;
+                document.getElementById('top-performer-achievements-count').innerText = `${top.highCount} Kejayaan Utama (INT/KEB/NEG)`;
+                document.getElementById('top-performer-avatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(top.name)}`;
+            }
+        }
+
+        // Recent Achievements Activity Feed
+        function renderRecentFeed(data) {
+            const container = document.getElementById('recent-achievements-feed');
+            container.innerHTML = '';
+
+            const recentList = [...data].slice(0, 4);
+
+            if (recentList.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Tiada rekod aktiviti terkini.</p>`;
+                return;
+            }
+
+            recentList.forEach(item => {
+                const badge = levelBadges[item.level] || levelBadges['SEK'];
+                container.innerHTML += `
+                    <div class="flex items-start justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 hover:border-slate-200 transition">
+                        <div class="space-y-1">
+                            <div class="flex items-center space-x-2">
+                                <span class="font-bold text-xs text-slate-800">${item.student}</span>
+                                <span class="text-[10px] text-slate-500">(${item.class})</span>
+                            </div>
+                            <p class="text-xs font-semibold text-brand-800">${item.program}</p>
+                            <p class="text-[10px] text-slate-400">Tarikh: ${item.date} • Guru: ${item.teacher || '-'}</p>
+                        </div>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badge.bg} ${badge.text} ${badge.border}">
+                            ${item.level}
+                        </span>
+                    </div>
+                `;
+            });
+        }
+
+        // Dynamic Table Render
+        function renderTable() {
+            const tbody = document.getElementById('student-table-body');
+            tbody.innerHTML = '';
+
+            let data = getFilteredData();
+
+            const searchVal = document.getElementById('table-search').value.toLowerCase().trim();
+            if (searchVal) {
+                data = data.filter(d => 
+                    d.student.toLowerCase().includes(searchVal) ||
+                    d.program.toLowerCase().includes(searchVal) ||
+                    d.class.toLowerCase().includes(searchVal)
+                );
+            }
+
+            const catVal = document.getElementById('category-filter').value;
+            if (catVal !== 'ALL') {
+                data = data.filter(d => d.category === catVal);
+            }
+
+            const totalRecords = data.length;
+            const totalPages = Math.ceil(totalRecords / rowsPerPage) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const startIdx = (currentPage - 1) * rowsPerPage;
+            const paginatedData = data.slice(startIdx, startIdx + rowsPerPage);
+
+            document.getElementById('table-pagination-info').innerText = `Menunjukkan ${totalRecords === 0 ? 0 : startIdx + 1} hingga ${Math.min(startIdx + rowsPerPage, totalRecords)} daripada ${totalRecords} rekod`;
+            document.getElementById('page-num-display').innerText = `${currentPage} / ${totalPages}`;
+
+            document.getElementById('btn-prev-page').disabled = currentPage === 1;
+            document.getElementById('btn-next-page').disabled = currentPage === totalPages;
+
+            if (paginatedData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="py-8 text-center text-slate-400">
+                            <i class="fa-solid fa-folder-open text-2xl mb-2 block"></i>
+                            Tiada rekod dijumpai.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            paginatedData.forEach(item => {
+                const badge = levelBadges[item.level] || levelBadges['SEK'];
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
+                tr.innerHTML = `
+                    <td class="py-3 px-4">
+                        <div class="flex items-center space-x-2.5">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(item.student)}" class="w-7 h-7 rounded-full bg-slate-100 border border-slate-200" alt="avatar">
+                            <div>
+                                <span class="font-bold text-slate-800 block">${item.student}</span>
+                                <span class="text-[10px] text-slate-500">${item.class}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <p class="font-semibold text-slate-800">${item.program}</p>
+                        <span class="text-[10px] text-slate-400">${item.category} • Pembimbing: ${item.teacher || '-'}</span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="px-2.5 py-1 rounded-md text-[11px] font-bold border ${badge.bg} ${badge.text} ${badge.border}">
+                            ${item.level}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 text-center font-extrabold text-emerald-600">
+                        +${item.merit}
+                    </td>
+                    <td class="py-3 px-4 text-center text-[11px] text-slate-500">
+                        ${item.date}
+                    </td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="deleteRecord(${item.id})" class="text-slate-400 hover:text-flame-600 p-1.5 rounded-lg hover:bg-red-50 transition" title="Padam Rekod">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        }
+
+        function nextPage() {
+            const data = getFilteredData();
+            const totalPages = Math.ceil(data.length / rowsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+            }
+        }
+
+        function deleteRecord(id) {
+            achievementsData = achievementsData.filter(d => d.id !== id);
+            refreshDashboard();
+            showToast("Rekod berjaya dipadam daripada pangkalan data.", "danger");
+        }
+
+        // Registration Form Submit Handler
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const student = document.getElementById('form-student').value.trim();
+            const studentClass = document.getElementById('form-class').value;
+            const program = document.getElementById('form-program').value.trim();
+            const level = document.getElementById('form-level').value;
+            const category = document.getElementById('form-category').value;
+            const merit = parseInt(document.getElementById('form-merit').value, 10);
+            const teacher = document.getElementById('form-teacher').value.trim() || "Cikgu SJKC Pei Hua Seremban";
+
+            const newRecord = {
+                id: Date.now(),
+                student,
+                class: studentClass,
+                program,
+                level,
+                category,
+                merit,
+                teacher,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            achievementsData.unshift(newRecord);
+            document.getElementById('activity-form').reset();
             
-            const goldGrad = ctx.createLinearGradient(0, 0, 0, 200); goldGrad.addColorStop(0, '#fbbf24'); goldGrad.addColorStop(1, 'rgba(251, 191, 36, 0.05)');
-            const silverGrad = ctx.createLinearGradient(0, 0, 0, 200); silverGrad.addColorStop(0, '#94a3b8'); silverGrad.addColorStop(1, 'rgba(148, 163, 184, 0.05)');
-            const bronzeGrad = ctx.createLinearGradient(0, 0, 0, 200); bronzeGrad.addColorStop(0, '#b45309'); bronzeGrad.addColorStop(1, 'rgba(180, 83, 9, 0.05)');
-            const blueGrad = ctx.createLinearGradient(0, 0, 0, 200); blueGrad.addColorStop(0, '#06b6d4'); blueGrad.addColorStop(1, 'rgba(6, 182, 212, 0.05)');
- 
+            refreshDashboard();
+            showToast(`Rekod baru untuk "${student}" telah didaftarkan!`, "success");
+        }
+
+        // Chart Initialization
+        function initChart() {
+            const ctx = document.getElementById('chartCanvas').getContext('2d');
             chartInstance = new Chart(ctx, {
                 type: 'bar',
-                data: {
-                    labels: ['EMAS', 'PERAK', 'GANGSA', 'PENY.'],
-                    datasets: [{
-                        data: [stats.Johan, stats["Naib Johan"], stats.Ketiga, stats.Penyertaan],
-                        backgroundColor: [goldGrad, silverGrad, bronzeGrad, blueGrad],
-                        borderColor: ['#fbbf24', '#94a3b8', '#b45309', '#06b6d4'],
-                        borderWidth: 1,
-                        borderRadius: 4
-                    }]
-                },
+                data: getChartData(),
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0a2540',
+                            padding: 12,
+                            titleFont: { family: 'Plus Jakarta Sans', size: 13, weight: 'bold' },
+                            bodyFont: { family: 'Plus Jakarta Sans', size: 12 },
+                            cornerRadius: 8
+                        }
+                    },
                     scales: {
-                        y: { 
-                            beginAtZero: true, 
-                            grid: { color: 'rgba(255,255,255,0.05)' }, 
-                            ticks: { color: '#94a3b8', stepSize: 1 } 
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision: 0, font: { family: 'Plus Jakarta Sans', size: 11 } },
+                            grid: { color: '#f1f5f9' }
                         },
-                        x: { 
-                            grid: { display: false }, 
-                            ticks: { color: '#94a3b8', font: { size: 10, weight: 'bold' } } 
+                        x: {
+                            ticks: { font: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' } },
+                            grid: { display: false }
                         }
                     }
                 }
             });
         }
 
-        function renderTable() {
-            const tbody = document.getElementById('pangkalan-data-body');
-            const filtered = currentFilter === 'SEMUA' ? studentsData : studentsData.filter(d => d.peringkat === currentFilter);
-            
-            tbody.innerHTML = filtered.map(d => `
-                <tr class="hover:bg-white/5 transition-colors">
-                    <td class="p-3 sm:p-4 text-white font-bold uppercase truncate max-w-[150px]">${d.nama}</td>
-                    <td class="p-3 sm:p-4 hidden sm:table-cell text-slate-300 uppercase truncate max-w-[200px]" title="${d.program}">${d.program}</td>
-                    <td class="p-3 sm:p-4">
-                        <span class="bg-cyan-900/40 text-cyan-300 border border-cyan-500/30 px-2 py-1 rounded-md text-[9px] font-bold uppercase">${d.peringkat}</span>
-                    </td>
-                    <td class="p-3 sm:p-4 text-center font-black text-amber-400">${d.merit}</td>
-                    <td class="p-3 sm:p-4 text-right">
-                        <button onclick="deleteRecord('${d.nama}', '${d.program}')" class="text-red-400 hover:text-red-300 bg-red-400/10 hover:bg-red-400/20 px-3 py-1.5 rounded-lg transition-all text-[9px] font-bold uppercase tracking-wider">Padam</button>
-                    </td>
-                </tr>
-            `).join('');
+        function getChartData() {
+            const levels = ['INT', 'KEB', 'NEG', 'ZON', 'D', 'SEK'];
+            const counts = levels.map(lvl => achievementsData.filter(item => item.level === lvl).length);
+
+            return {
+                labels: ['Antarabangsa (INT)', 'Kebangsaan (KEB)', 'Negeri (NEG)', 'Zon (ZON)', 'Daerah (D)', 'Sekolah (SEK)'],
+                datasets: [{
+                    label: 'Bilangan Kejayaan',
+                    data: counts,
+                    backgroundColor: [
+                        '#8b5cf6',
+                        '#dc2626',
+                        '#f59e0b',
+                        '#1d4ed8',
+                        '#10b981',
+                        '#64748b'
+                    ],
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            };
         }
 
-        function searchTable() {
-            const input = document.getElementById("search-input").value.toUpperCase();
-            const tr = document.getElementById("pangkalan-data-body").getElementsByTagName("tr");
-            for (let i = 0; i < tr.length; i++) {
-                let tdName = tr[i].getElementsByTagName("td")[0];
-                let tdProg = tr[i].getElementsByTagName("td")[1];
-                if (tdName || tdProg) {
-                    let txtValue = (tdName.textContent || tdName.innerText) + " " + (tdProg ? (tdProg.textContent || tdProg.innerText) : "");
-                    if (txtValue.toUpperCase().indexOf(input) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
+        function updateChart() {
+            if (chartInstance) {
+                chartInstance.data = getChartData();
+                chartInstance.update();
             }
         }
 
-        function switchView(view) {
-            ['dashboard', 'list', 'form'].forEach(v => {
-                document.getElementById(`view-${v}`).classList.add('hidden');
-                document.getElementById(`btn-${v}`).classList.replace('bg-cyan-500/20', 'hover:bg-white/5');
-                document.getElementById(`btn-${v}`).classList.replace('text-cyan-400', 'text-slate-400');
-            });
-            
-            document.getElementById(`view-${view}`).classList.remove('hidden');
-            document.getElementById(`btn-${view}`).classList.replace('hover:bg-white/5', 'bg-cyan-500/20');
-            document.getElementById(`btn-${view}`).classList.replace('text-slate-400', 'text-cyan-400');
+        // Toast Messages
+        function showToast(message, type = "info") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgClass = type === "danger" ? "bg-flame-600" : type === "success" ? "bg-emerald-600" : "bg-brand-900";
 
-            if(view === 'dashboard' || view === 'list') {
-                updateUI();
-            }
-        }
-
-        function filterByOrb(level) {
-            currentFilter = level;
-            document.getElementById('current-filter-label').innerText = level === 'SEMUA' ? 'SEMUA REKOD' : level;
-            
-            document.querySelectorAll('.orb').forEach(el => el.classList.remove('orb-active'));
-            if(level !== 'SEMUA' && document.getElementById(`orb-${level}`)) {
-                document.getElementById(`orb-${level}`).classList.add('orb-active');
-            }
-            
-            if (typeof gsap !== 'undefined') {
-                gsap.fromTo("#current-filter-label", { y: -10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3 });
-            }
-            updateUI();
-        }
-
-        function addNameField() {
-            const container = document.getElementById('student-name-container');
-            const div = document.createElement('div');
-            div.className = 'flex space-x-2 mt-2';
-            div.innerHTML = `
-                <input type="text" placeholder="NAMA PENUH MURID" class="student-name-input flex-1 bg-slate-950/40 border border-white/10 rounded-xl p-3 sm:p-4 outline-none focus:border-cyan-400 font-bold text-sm sm:text-[11px] uppercase text-white">
-                <button type="button" onclick="this.parentElement.remove()" class="bg-red-500/10 text-red-400 w-12 rounded-xl hover:bg-red-500 hover:text-white transition-all font-bold text-xl">-</button>
+            toast.className = `${bgClass} text-white px-4 py-3 rounded-xl shadow-xl text-xs font-semibold flex items-center space-x-2 transition-all transform translate-y-2 opacity-0 pointer-events-auto`;
+            toast.innerHTML = `
+                <i class="fa-solid ${type === 'danger' ? 'fa-circle-exclamation' : type === 'success' ? 'fa-circle-check' : 'fa-circle-info'} text-sm"></i>
+                <span>${message}</span>
             `;
-            container.appendChild(div);
+
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
-
-        // Init Data Fetching on load
-        window.addEventListener('DOMContentLoaded', fetchDataFromGoogle);
-
     </script>
 </body>
 </html>
